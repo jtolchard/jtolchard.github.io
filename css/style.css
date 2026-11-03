@@ -13,6 +13,8 @@
   --grid: #f0eee9;
   --fid: #2563b8;      /* time domain: the FID */
   --spec: #d4461a;     /* frequency domain: the spectrum */
+  --green: #7cb594;    /* extra colours, for one object that needs its own: e.g. a battery */
+  --red: #b8233f;      /* … or RF pulses */
   --accent: #d4461a;   /* links */
   --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -32,6 +34,8 @@
     --grid: #1c2025;
     --fid: #6aa5ff;
     --spec: #ff8857;
+    --green: #5d9c79;
+    --red: #ff6b7f;
     --accent: #ff8857;
     color-scheme: dark;
   }

@@ -49,6 +49,8 @@ Only ever use colours through `th` (e.g. `th.spec`), never as hex values. That w
 | `surface` | fills for solid objects (e.g. a rotor body) | `#ffffff` | `#171a1e` |
 | `fid` | **blue**: time domain, signals, "before", inputs | `#2563b8` | `#6aa5ff` |
 | `spec` | **orange**: frequency domain, results, "after", emphasis | `#d4461a` | `#ff8857` |
+| `green` | extra: one object that needs a colour of its own (e.g. a battery). Use sparingly | `#7cb594` | `#5d9c79` |
+| `red` | extra: one object that needs a colour of its own (e.g. RF pulses). Use sparingly | `#b8233f` | `#ff6b7f` |
 | `mono` | label font: IBM Plex Mono, 12 px | | |
 
 The site's colour language: blue is the time domain and orange is the frequency domain. The home page's FID→spectrum strip fades from one to the other, and you can do the same with a `fid`→`spec` gradient. Use `muted` and `rule` for scaffolding (axes, guides) so that the blue and orange carry the meaning. For transparency use `ctx.globalAlpha`, and reset it to 1 afterwards.
@@ -143,6 +145,8 @@ Colours (use only th.<name>, never hex, so it follows light/dark mode; hex given
   th.surface  fills for solid objects               light #ffffff   dark #171a1e
   th.fid      BLUE: time domain, signals, before    light #2563b8   dark #6aa5ff
   th.spec     ORANGE: frequency domain, results     light #d4461a   dark #ff8857
+  th.green    extra: one object needing its own colour, sparingly  light #7cb594   dark #5d9c79
+  th.red      extra: one object needing its own colour, sparingly  light #b8233f   dark #ff6b7f
   th.mono     label font, IBM Plex Mono at 12px
   Blue is the time domain and orange the frequency domain; a fid→spec gradient is the site's
   signature. Scaffolding in muted/rule so blue and orange carry the meaning.

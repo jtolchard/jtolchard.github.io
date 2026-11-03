@@ -429,9 +429,10 @@
        and the value changes; LEAD seconds later the spectrum and strand respond. The
        highlight stays until that effect has finished. */
     const PX = 8, PH = 22;                                          // highlight padding and height
-    const fits = set => set.reduce((sum, [a, b]) => sum + Math.max(ctx.measureText(a).width, ctx.measureText(b).width), 0) + 32 + 2 * PX <= x1 - x0;
+    const wid = text => Anim.measure(ctx, th, text);              // as drawn, with tight ²H and ¹³CHD₂
+    const fits = set => set.reduce((sum, [a, b]) => sum + Math.max(wid(a), wid(b)), 0) + 32 + 2 * PX <= x1 - x0;
     const set = fits(READOUTS.wide) ? READOUTS.wide : READOUTS.narrow;
-    const slot = set.map(([a, b]) => Math.max(ctx.measureText(a).width, ctx.measureText(b).width));
+    const slot = set.map(([a, b]) => Math.max(wid(a), wid(b)));
     const anchor = [x0 + PX, (x0 + PX + slot[0] + x1 - PX - slot[2]) / 2, x1 - PX], align = ['left', 'center', 'right'];
     [COOL, DIL, MAS].forEach(([a, b], k) => {
       const r = a - LEAD;                                           // when the readout changes

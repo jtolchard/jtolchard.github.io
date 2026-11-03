@@ -141,7 +141,7 @@ window.PUBLICATIONS = [
     journal: "J. Am. Chem. Soc. 147(22), 19039–19051",
     authors: "Gioiosa C, Pokochueva EV, Dieterich J, Tolchard J, Bocquelet C, Ennachet MA, Le NH, Veyre L, Montarnal D, Lesage A, Laage S, Pondaven S, Jannin S",
     doi: "10.1021/jacs.5c03773",
-    media: { type: "animation", name: "precession", alt: "Magnetisation tipping and precessing on a Bloch sphere" }
+    media: { type: "animation", name: "ddnp-batteries-2025", alt: "A battery cracks open like an egg and a drop of its electrolyte falls into a sample cup, which goes down into a polariser, freezes at 1.6 K and is hyperpolarised by microwaves; solvent heated to about 430 K then melts it and pushes it along a transfer line into an NMR magnet, which records a high signal-to-noise carbon-13 spectrum." }
   },
   {
     id: "calcitonin-2017",

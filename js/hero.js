@@ -176,8 +176,8 @@
     const { ctx } = st;
     ctx.font = `12px ${th.mono}`;
     ctx.fillStyle = color || th.muted;
-    ctx.textAlign = align; ctx.textBaseline = 'alphabetic';
-    ctx.fillText(str, x, y);
+    ctx.textBaseline = 'alphabetic';
+    Plot.text(ctx, str, x, y, { size: 12, family: th.mono, align });   // ¹³C with a tight superscript
   }
 
   function draw(p) {

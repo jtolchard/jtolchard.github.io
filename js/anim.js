@@ -111,13 +111,13 @@
     };
   }
 
+  // Superscripts and subscripts (¹³C, CHD₂) come out small and tightly set (see Plot.text).
   function label(ctx, th, text, x, y, align = 'left', color) {
-    ctx.font = `12px ${th.mono}`;
     ctx.fillStyle = color || th.muted;
-    ctx.textAlign = align;
     ctx.textBaseline = 'middle';
-    ctx.fillText(text, x, y);
+    Plot.text(ctx, text, x, y, { size: 12, family: th.mono, align });
   }
+  const measure = (ctx, th, text) => Plot.textWidth(ctx, text, 12, th.mono);   // a label's width, in px
 
   function seeded(seed) {
     return () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
@@ -325,8 +325,9 @@
 
   // label and seeded are shared with your own animations:
   //   Anim.label(ctx, th, "text", x, y, align, colour)  12px mono, vertically centred
+  //   Anim.measure(ctx, th, "text")  how wide that label is drawn, in px
   //   Anim.seeded(42)  a repeatable random number generator (returns 0 … 1)
   //   Anim.still(name)  the time of an animation's reduced-motion frame
   //   Anim.loop(name)   the length of its loop in seconds (0 if unknown)
-  global.Anim = { register, mount, load, label, seeded, still, loop, get: name => registry[name], names: () => Object.keys(registry) };
+  global.Anim = { register, mount, load, label, measure, seeded, still, loop, get: name => registry[name], names: () => Object.keys(registry) };
 })(window);
