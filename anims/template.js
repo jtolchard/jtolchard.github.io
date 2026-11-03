@@ -58,5 +58,5 @@
     // labels: 12px mono, muted unless they carry the point
     Anim.label(ctx, th, `scans ${scans}`, x0, pad + 6, 'left', th.ink);
     Anim.label(ctx, th, 'S/N ∝ √N', x1, pad + 6, 'right');
-  });
+  }, { loop: CYCLE });   // the loop's length, for the enlarged view's scrubber (and { still: s } to choose the reduced-motion frame)
 })();

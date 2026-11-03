@@ -336,6 +336,6 @@ window.PUBLICATIONS = [
     journal: "Angew. Chem. Int. Ed., e3761769",
     authors: "Tolchard J, Le Marchand T, El Mammeri N, Sharma K, Bishoyi AK, Berbon M, Jaudzems K, Wisser D, Daskalov A, Saupe SJ, Stanek J, Sun Z, Ouari O, Habenstein B, Lesage A, Pintacuda G, Loquet A",
     doi: "10.1002/anie.3761769",
-    media: { type: "animation", name: "rotor", alt: "Rotor spinning at the magic angle" }
+    media: { type: "animation", name: "proton-dnp-2026", alt: "A fibril strand dense with coupled protons gives a somewhat broad ¹H spectrum at 298 K and 12 kHz spinning, which broadens on cooling to 100 K. Spin dilution with ¹³CHD₂ methyls and then 40 kHz spinning resolve it; adding the DNP biradical broadens the peaks, and switching on the microwaves lifts the signal far above the noise. Finally, a distance between two methyl protons appears, linked to the two peaks it correlates." }
   }
 ];

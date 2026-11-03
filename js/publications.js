@@ -2,7 +2,8 @@
    Publications page.
      the map        every paper as a peak, by date and theme (js/pubmap.js)
      the panel      the selected paper: figure, summary, authors, DOI; step
-                    through papers with the arrows (or ← / → on the map)
+                    through papers with the arrows (or ← / → on the map).
+                    Click an animated figure to see it larger, with the paper.
      the full list  CV style, newest first, grouped by year
    Papers come from data/publications.js. A link to publications.html#<id>
    opens the page on that paper.
@@ -57,23 +58,32 @@
   const q = sel => panel.querySelector(sel);
   const media = q('.pub-detail-media');
   const animCanvas = el('canvas', { role: 'img' });
-  media.append(animCanvas);
+  const expandBtn = el('button', { class: 'fig-expand', type: 'button', 'aria-label': 'Enlarge the figure', title: 'Enlarge' });
+  expandBtn.innerHTML = '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M9.5 2.5h4v4M13.5 2.5 9 7M6.5 13.5h-4v-4M2.5 13.5 7 9" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  media.append(animCanvas, expandBtn);
   let anim = null, extra = null, current = -1;
+  let shown = null;   // the animation in the panel now: { name, alt }
   let filter = null;  // a theme chosen on the map, or null for all papers
   const pool = () => (filter ? papers.filter(p => p.theme === filter) : papers);
 
   function showMedia(p) {
     const m = p.media || { type: 'animation', name: STAND_IN[p.theme] || 'precession', alt: 'Illustrative animation' };
     if (extra) { extra.remove(); extra = null; }
+    expandBtn.hidden = m.type !== 'animation';
     if (m.type === 'animation') {
       animCanvas.hidden = false;
       animCanvas.setAttribute('aria-label', m.alt || `${m.name} animation`);
       if (!anim) anim = Anim.mount(animCanvas);
+      shown = { name: m.name, alt: m.alt || `${m.name} animation` };
       // your own animations load from anims/<name>.js; if that's missing, show the theme's stand-in
       anim.set(m.name).then(ok => {
-        if (!ok && papers[current] === p) anim.set(STAND_IN[p.theme] || 'precession');
+        if (!ok && papers[current] === p) {
+          shown = { name: STAND_IN[p.theme] || 'precession', alt: 'Illustrative animation' };
+          anim.set(shown.name);
+        }
       });
     } else {
+      shown = null;
       animCanvas.hidden = true;   // hidden canvases stop animating
       if (m.type === 'image') extra = el('img', { src: m.src, alt: m.alt || '', decoding: 'async' });
       else if (m.type === 'video') {
@@ -87,22 +97,29 @@
     }
   }
 
-  function show(p, { scroll = false } = {}) {
-    current = papers.indexOf(p);
+  // The paper's details (meta line, title, summary, authors, links), written into
+  // the matching elements inside root: the panel, or the enlarged view.
+  function fillInfo(root, p) {
+    const f = sel => root.querySelector(sel);
     const href = p.url || (p.doi ? `https://doi.org/${p.doi}` : null);
-    q('.pub-meta').replaceChildren(
+    f('.pub-meta').replaceChildren(
       el('span', { class: 'pub-year' }, String(p.year)),
       p.journal ? el('span', {}, p.journal) : null,
       themes[p.theme] ? el('span', { class: 'pub-theme' }, themes[p.theme]) : null);
-    q('.pub-detail-title').replaceChildren(href ? el('a', { href, target: '_blank', rel: 'noopener' }, p.title) : p.title);
-    q('.pub-sub').textContent = p.subtitle || '';
-    const au = q('.pub-authors');
+    f('.pub-detail-title').replaceChildren(href ? el('a', { href, target: '_blank', rel: 'noopener' }, p.title) : p.title);
+    f('.pub-sub').textContent = p.subtitle || '';
+    const au = f('.pub-authors');
     au.replaceChildren(...(p.authors ? authors(p.authors, true) : []));
     if (p.authors && p.authors.split(',').length > MAX_AUTHORS) au.title = p.authors; else au.removeAttribute('title');
     const links = [];
     if (p.doi) links.push(el('a', { href: `https://doi.org/${p.doi}`, target: '_blank', rel: 'noopener' }, 'DOI ↗'));
     for (const l of p.links || []) links.push(el('a', { href: l.href, target: '_blank', rel: 'noopener' }, l.label));
-    q('.pub-links').replaceChildren(...links);
+    f('.pub-links').replaceChildren(...links);
+  }
+
+  function show(p, { scroll = false } = {}) {
+    current = papers.indexOf(p);
+    fillInfo(panel, p);
     const inPool = pool(), at = inPool.indexOf(p);
     q('.pub-detail-count').textContent = `${at + 1} of ${inPool.length}${filter ? ' · ' + themes[filter] : ''}`;
     q('[data-step="-1"]').disabled = at <= 0;
@@ -122,6 +139,64 @@
     if (i >= 0 && i < inPool.length) show(inPool[i]);
   };
   panel.querySelectorAll('[data-step]').forEach(b => b.addEventListener('click', () => step(+b.dataset.step)));
+
+  /* ---------- The enlarged figure ----------
+     Clicking the panel's animation (or its enlarge button) opens it larger, from the
+     start, beside the paper's details. Esc, the close button or a click outside closes it.
+     Below it, a scrubber runs across one loop and starts again from the left each time
+     the animation repeats; dragging it pauses the animation there. */
+
+  const bigCanvas = el('canvas', { role: 'img' });
+  const closeBtn = el('button', { class: 'step-btn fig-dialog-close', type: 'button', 'aria-label': 'Close' }, '×');
+  const playBtn = el('button', { type: 'button' }, 'pause');
+  const scrub = el('input', { type: 'range', min: 0, max: 1000, step: 1, value: 0, 'aria-label': 'Position in the animation' });
+  const bar = el('div', { class: 'fig-dialog-bar' }, playBtn, scrub);
+  const dialog = el('dialog', { class: 'fig-dialog', 'aria-labelledby': 'fig-dialog-title' },
+    closeBtn,
+    el('div', { class: 'fig-dialog-inner' },
+      el('div', { class: 'fig-dialog-left' },
+        el('figure', { class: 'fig-dialog-media' }, bigCanvas),
+        bar),
+      el('div', { class: 'fig-dialog-body' },
+        el('p', { class: 'pub-meta' }),
+        el('h2', { class: 'pub-detail-title', id: 'fig-dialog-title' }),
+        el('p', { class: 'pub-sub' }),
+        el('p', { class: 'pub-authors' }),
+        el('p', { class: 'pub-links' }))));
+  document.body.append(dialog);
+  let big = null, loopLen = 0;
+
+  const showPlaying = () => { playBtn.textContent = big && big.paused() ? 'play' : 'pause'; };
+  function enlarge() {
+    const p = papers[current];
+    if (!p || !shown || typeof dialog.showModal !== 'function') return;
+    fillInfo(dialog, p);
+    bigCanvas.setAttribute('aria-label', shown.alt);
+    loopLen = Anim.loop(shown.name);
+    bar.hidden = !loopLen;                   // no scrubber for an animation without a loop
+    playBtn.hidden = reduce.matches;         // reduced motion: it holds still, but can be scrubbed
+    dialog.showModal();
+    // after showModal, so the canvas has its size; the scrubber follows each frame
+    if (!big) big = Anim.mount(bigCanvas, null, {
+      onFrame: t => { if (loopLen) scrub.value = String(Math.round(((t % loopLen) / loopLen) * 1000)); }
+    });
+    big.set(shown.name);                     // restarts it from the beginning
+    showPlaying();
+  }
+  playBtn.addEventListener('click', () => { if (big.paused()) big.play(); else big.pause(); showPlaying(); });
+  scrub.addEventListener('input', () => {
+    big.pause();
+    big.seek((+scrub.value / 1000) * loopLen);
+    showPlaying();
+  });
+  animCanvas.addEventListener('click', enlarge);
+  expandBtn.addEventListener('click', enlarge);
+  closeBtn.addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', e => {   // a click on the backdrop, outside the box
+    if (e.target !== dialog) return;          // not one on (or a key press in) something inside it
+    const r = dialog.getBoundingClientRect();
+    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dialog.close();
+  });
 
   /* ---------- The full list, CV style ---------- */
 

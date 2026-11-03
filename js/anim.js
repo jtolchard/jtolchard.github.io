@@ -4,16 +4,19 @@
 
    Built in (below): precession, rotor, contour, pulse.
    Your own: put each in its own file, anims/<name>.js, which calls
-     Anim.register("<name>", function (ctx, w, h, t, th) { ... })
+     Anim.register("<name>", function (ctx, w, h, t, th) { ... }, { still: 3.1, loop: 7 })
        ctx = 2D canvas context, w/h = size in CSS pixels, t = seconds,
        th  = theme colours (th.ink, th.fid, th.spec, th.muted, th.rule, ...)
+       still (optional) = the time of the frame shown to reduced-motion visitors
+       loop  (optional) = the loop's length in seconds, for the enlarged view's scrubber
    then set  media: { type: "animation", name: "<name>" }  on the paper.
    The file is loaded the first time that paper is shown; nothing else needs
    adding to the page. See anims/README.md for the full brief, and
    anims/preview.html?name=<name> to try one out.
 
-   Animations only run while on screen, and hold still (at t = 3.1 s) for
-   visitors who have asked their system to reduce motion.
+   Animations only run while on screen, and hold still (at t = 3.1 s, or the
+   animation's own still time) for visitors who have asked their system to
+   reduce motion.
    ========================================================================== */
 (function (global) {
   'use strict';
@@ -21,9 +24,17 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
   const dark = matchMedia('(prefers-color-scheme: dark)');
   const registry = {};
+  const stills = {};   // the time of each animation's reduced-motion frame
+  const loops = {};    // the length of each animation's loop, where it has one
   const loading = {};
 
-  function register(name, fn) { registry[name] = fn; }
+  function register(name, fn, opts = {}) {
+    registry[name] = fn;
+    stills[name] = typeof opts.still === 'number' ? opts.still : 3.1;
+    if (typeof opts.loop === 'number' && opts.loop > 0) loops[name] = opts.loop;
+  }
+  const still = name => stills[name] ?? 3.1;
+  const loop = name => loops[name] || 0;   // 0: unknown, or it doesn't loop
 
   // Resolves true once an animation is ready: at once for one already
   // registered, otherwise after loading <base><name>.js (once per name).
@@ -45,25 +56,31 @@
     return loading[name];
   }
 
-  // Returns { set(name) } to switch the same canvas to another animation.
+  // Returns { set(name), pause(), play(), seek(t), paused() }: set switches the
+  // same canvas to another animation (from the start); the rest drive a scrubber.
   // opts.base: where to look for animation files (default "anims/").
+  // opts.onFrame(t): called with the time of each frame drawn.
   function mount(canvas, name, opts = {}) {
     let fn = null, want = null;
     let th = Plot.theme();
     let running = false, raf = 0;
     let t0 = performance.now();
+    let held = null;   // while paused (or scrubbed): the time it holds at
     const st = Plot.fitCanvas(canvas, () => paint(performance.now()));
+    const timeAt = now => (held != null ? held : reduce.matches ? still(want) : (now - t0) / 1000);
 
     // paint draws one frame; frame keeps the loop going while on screen.
     // An animation that throws is stopped (and reported) rather than
     // breaking the page.
     function paint(now) {
       if (!st.w || !fn) return;
-      try { fn(st.ctx, st.w, st.h, reduce.matches ? 3.1 : (now - t0) / 1000, th); }
-      catch (err) { console.error(`Animation "${want}" stopped:`, err); fn = null; }
+      const t = timeAt(now);
+      try { fn(st.ctx, st.w, st.h, t, th); }
+      catch (err) { console.error(`Animation "${want}" stopped:`, err); fn = null; return; }
+      if (opts.onFrame) opts.onFrame(t);
     }
     function frame(now) {
-      paint(now);
+      if (held == null) paint(now);
       if (running && !reduce.matches) raf = requestAnimationFrame(frame);
     }
     new IntersectionObserver(([e]) => {
@@ -73,7 +90,7 @@
     dark.addEventListener('change', () => { th = Plot.theme(); paint(performance.now()); });
     // Resolves true once it's showing, false if there's no such animation.
     function set(next) {
-      want = next;
+      want = next; held = null;
       fn = registry[next] || null;
       if (!fn) st.ctx.clearRect(0, 0, st.w, st.h); // blank while its file loads
       t0 = performance.now(); paint(t0);
@@ -84,7 +101,14 @@
       });
     }
     if (name) set(name);
-    return { set };
+    const now = () => performance.now();
+    return {
+      set,
+      pause() { if (held == null) held = timeAt(now()); },
+      play() { if (held != null) { t0 = now() - held * 1000; held = null; } },   // carries on from where it was
+      seek(t) { held = t; paint(now()); },                                    // jumps to t, and holds there
+      paused: () => held != null
+    };
   }
 
   function label(ctx, th, text, x, y, align = 'left', color) {
@@ -156,7 +180,7 @@
     }
     ctx.stroke();
     label(ctx, th, 'signal', gx, gy - gh - 10);
-  });
+  }, { loop: 7.5 });
 
   /* ---------- Magic-angle spinning rotor ---------- */
   register('rotor', function (ctx, w, h, t, th) {
@@ -245,7 +269,7 @@
       ctx.beginPath(); ctx.moveTo(sx, pad.t); ctx.lineTo(sx, pad.t + ph); ctx.stroke();
       ctx.setLineDash([]); ctx.globalAlpha = 1;
     }
-  });
+  }, { loop: 7 });
 
   /* ---------- Cross-polarisation pulse sequence ---------- */
   register('pulse', function (ctx, w, h, t, th) {
@@ -297,10 +321,12 @@
     ctx.strokeStyle = th.ink; ctx.globalAlpha = 0.35; ctx.setLineDash([2, 3]);
     ctx.beginPath(); ctx.moveTo(at(cur), h * 0.12); ctx.lineTo(at(cur), h * 0.9); ctx.stroke();
     ctx.setLineDash([]); ctx.globalAlpha = 1;
-  });
+  }, { loop: 5.5 });
 
   // label and seeded are shared with your own animations:
   //   Anim.label(ctx, th, "text", x, y, align, colour)  12px mono, vertically centred
   //   Anim.seeded(42)  a repeatable random number generator (returns 0 … 1)
-  global.Anim = { register, mount, load, label, seeded, get: name => registry[name], names: () => Object.keys(registry) };
+  //   Anim.still(name)  the time of an animation's reduced-motion frame
+  //   Anim.loop(name)   the length of its loop in seconds (0 if unknown)
+  global.Anim = { register, mount, load, label, seeded, still, loop, get: name => registry[name], names: () => Object.keys(registry) };
 })(window);

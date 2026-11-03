@@ -59,6 +59,7 @@ These values mirror `css/style.css`. If you change them there, the site and the 
 
 ```js
 Anim.register("<name>", function (ctx, w, h, t, th) { … });
+Anim.register("<name>", function (ctx, w, h, t, th) { … }, { loop: 7, still: 5.5 });   // optional
 ```
 
 - **`ctx`** is the 2D canvas context.
@@ -68,8 +69,8 @@ Anim.register("<name>", function (ctx, w, h, t, th) { … });
 
 How it runs:
 - It's called every frame while the panel is on screen, so clear the canvas (`ctx.clearRect(0, 0, w, h)`) and redraw everything each time. Leave the background clear, because the panel colour shows through.
-- **Loop** with `t % CYCLE`. About 5–10 s works well, with a short hold on the end state before it restarts.
-- **Reduced motion:** visitors who ask for reduced motion see a single still frame at **t = 3.1 s**, so make sure that frame tells the story on its own.
+- **Loop** with `t % CYCLE`. About 5–10 s works well, with a short hold on the end state before it restarts. Pass the loop's length as `{ loop: CYCLE }` in the third argument to `Anim.register`: clicking the figure on the Publications page opens it larger, with a scrubber that runs across one loop (and starts again from the left each time it repeats). Without `loop`, the enlarged view has no scrubber.
+- **Reduced motion:** visitors who ask for reduced motion see a single still frame at **t = 3.1 s**, so make sure that frame tells the story on its own. If the story takes longer than that to build, pass `{ still: <seconds> }` as a third argument to `Anim.register` to choose a later frame. The preview's still-frame button follows it.
 - **Do one-off work once.** Do it at the top of the file (as `template.js` does with its noise), not in the frame function, and keep each frame cheap.
 - **Keep it self-contained.** No DOM access, event listeners, timers, libraries or external files.
 
@@ -121,7 +122,9 @@ Contract
   w, h: CSS pixels (high-DPI is already handled); t: seconds since shown; th: colours.
   Clear with ctx.clearRect(0, 0, w, h) and redraw everything each frame; leave the background clear.
 - Loop with t % CYCLE (5–10 s, with a short hold on the end state). Reduced-motion visitors see
-  only the frame at t = 3.1 s, so it must work as a still.
+  only the frame at t = 3.1 s, so it must work as a still. (If the story needs longer, pass
+  { still: <seconds> } as a third argument to Anim.register to pick a later frame.) Also pass
+  { loop: CYCLE } there, so the enlarged view's scrubber knows the loop's length.
 - Do one-off work at file load and keep each frame cheap. No DOM, listeners, timers, libraries or
   external files. Helpers: Anim.label(ctx, th, text, x, y, align, colour) for 12px mono labels;
   Anim.seeded(n) for repeatable random numbers.

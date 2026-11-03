@@ -242,6 +242,47 @@ code, .mono { font-family: var(--mono); }
 .step-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
 .step-btn:disabled { opacity: 0.35; cursor: default; }
 
+/* the enlarge button on an animated figure, and the enlarged view (js/publications.js) */
+.pub-detail-media > canvas { cursor: zoom-in; }
+.pub-detail-media > .fig-expand {
+  position: absolute; top: 8px; right: 8px; z-index: 1; width: 32px; height: 32px;
+  display: grid; place-items: center; padding: 0; cursor: pointer;
+  border: 1px solid var(--rule); border-radius: 999px; background: var(--surface); color: var(--ink-soft);
+  opacity: 0; transition: opacity 0.2s;
+}
+.pub-detail-media:hover > .fig-expand, .pub-detail-media > .fig-expand:focus-visible { opacity: 1; }
+.pub-detail-media > .fig-expand:hover { border-color: var(--accent); color: var(--accent); }
+.pub-detail-media > .fig-expand[hidden] { display: none; }
+
+.fig-dialog {
+  width: min(1080px, calc(100vw - 2 * var(--gutter))); max-width: none;
+  max-height: calc(100vh - 2 * var(--gutter)); max-height: calc(100dvh - 2 * var(--gutter));
+  padding: 20px; border: 1px solid var(--rule); border-radius: 14px;
+  background: var(--surface); color: var(--ink); overflow: auto;
+}
+.fig-dialog::backdrop { background: color-mix(in srgb, var(--bg) 85%, transparent); }
+.fig-dialog-inner { display: grid; grid-template-columns: minmax(0, 660px) minmax(240px, 1fr); gap: 24px; align-items: start; }
+.fig-dialog-media {
+  margin: 0; width: 100%; aspect-ratio: 4 / 3; border-radius: 10px; overflow: hidden;
+  border: 1px solid var(--rule); background: var(--bg);
+  max-width: calc((100vh - 2 * var(--gutter) - 86px) * 4 / 3);   /* fits short screens too, with the scrubber */
+}
+.fig-dialog-left { min-width: 0; }
+/* play/pause and the scrubber, styled like the animation preview's */
+.fig-dialog-bar { display: flex; align-items: center; gap: 12px; margin-top: 12px; font-family: var(--mono); font-size: 13px; }
+.fig-dialog-bar[hidden], .fig-dialog-bar > [hidden] { display: none; }
+.fig-dialog-bar button { font: inherit; min-width: 7ch; color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.fig-dialog-bar button:hover { border-color: var(--accent); color: var(--accent); }
+.fig-dialog-bar input[type="range"] { flex: 1; min-width: 0; margin: 0; accent-color: var(--accent); cursor: pointer; }
+.fig-dialog-media canvas { width: 100%; height: 100%; }
+.fig-dialog-body { min-width: 0; padding-right: 36px; }
+.fig-dialog-close { position: absolute; top: 12px; right: 12px; font-size: 18px; line-height: 1; }
+@media (max-width: 980px) {
+  .fig-dialog { padding: 54px 14px 16px; }
+  .fig-dialog-inner { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .fig-dialog-body { padding-right: 0; }
+}
+
 /* the full list, CV style */
 .pub-all { border-top: 1px solid var(--rule); padding-top: 32px; margin-bottom: 64px; scroll-margin-top: calc(var(--nav-h) + 16px); }
 .pub-all-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
