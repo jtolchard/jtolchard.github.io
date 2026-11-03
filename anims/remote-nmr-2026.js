@@ -191,14 +191,13 @@
     ctx.beginPath();
     for (const dy of [0.085, 0.11]) { ctx.moveTo(mx - bw / 2, my0 + bodyH * dy); ctx.lineTo(mx + bw / 2, my0 + bodyH * dy); }
     ctx.stroke();
-    // turrets: two tall ones joined by a cross-bar, and the central bore tower between them
+    // turrets: two tall ones, and the central bore tower between them
     const capH = Math.max(2, bodyH * 0.035);
     for (const sgn of [-1, 1]) {
       const tx = mx + sgn * bw * 0.28, tW = bw * 0.13;
       box(tx - tW / 2, yT + capH, tW, my0 - yT - capH + 1);
       box(tx - tW * 0.8, yT, tW * 1.6, capH);
     }
-    ctx.beginPath(); ctx.moveTo(mx - bw * 0.28, yT + turretH * 0.3); ctx.lineTo(mx + bw * 0.28, yT + turretH * 0.3); ctx.stroke();
     const cW = bw * 0.12;
     box(mx - cW / 2, coreTop + capH, cW, my0 - coreTop - capH + 1);
     box(mx - cW * 0.8, coreTop, cW * 1.6, capH);
