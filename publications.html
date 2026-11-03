@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Publications · James Tolchard</title>
+  <meta name="description" content="Publications by James Tolchard, mapped by date and research theme like a 2D NMR spectrum, with the full list below.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="nav">
+    <div class="wrap-wide">
+      <a class="brand" href="index.html"><img src="assets/favicon.svg" width="22" height="22" alt=""><span class="brand-name">James Tolchard</span></a>
+      <nav class="nav-links" aria-label="Main">
+        <a class="nav-home" href="index.html">Home</a>
+        <a href="publications.html" aria-current="page">Publications</a>
+        <a href="code.html">Code</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap-wide pubs">
+    <section class="page-head">
+      <h1>Publications</h1>
+      <p class="lede">
+        Each peak is a paper, placed by date and research theme. Click a peak to read about it.
+        The <a href="#all-publications">full list</a> is below.
+      </p>
+    </section>
+
+    <section class="pub-explorer" id="pub-explorer" aria-label="Map of papers and the selected paper">
+      <div class="map-wrap"><canvas id="pub-map" role="img" aria-label="Map of papers by date and research theme. Use the left and right arrow keys to step through them."></canvas></div>
+      <article class="pub-detail" id="pub-detail" aria-live="polite">
+        <figure class="pub-detail-media"></figure>
+        <div class="pub-detail-body">
+          <p class="pub-meta"></p>
+          <h2 class="pub-detail-title"></h2>
+          <p class="pub-sub"></p>
+          <p class="pub-authors"></p>
+          <p class="pub-links"></p>
+          <div class="pub-detail-nav">
+            <button class="step-btn" type="button" data-step="-1" aria-label="Newer paper">←</button>
+            <span class="pub-detail-count"></span>
+            <button class="step-btn" type="button" data-step="1" aria-label="Older paper">→</button>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="pub-all" id="all-publications" aria-labelledby="pub-all-title">
+      <div class="pub-all-head">
+        <h2 id="pub-all-title">All publications</h2>
+        <span class="pub-all-note"><span id="pub-count">0</span> papers, newest first</span>
+      </div>
+      <div id="pub-all-list"></div>
+      <noscript><p>This list is built with JavaScript. Please enable it to see the papers.</p></noscript>
+      <p class="pub-all-more">Also on <a href="https://scholar.google.com/citations?user=0Bq9WmoAAAAJ" target="_blank" rel="noopener">Google Scholar</a> and <a href="https://orcid.org/0000-0002-5779-4935" target="_blank" rel="noopener">ORCID</a>.</p>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap-wide">© 2026 James Tolchard · Plain HTML and JavaScript, hosted on GitHub Pages</div>
+  </footer>
+
+  <script src="js/plot.js"></script>
+  <script src="js/anim.js"></script>
+  <script src="data/publications.js"></script>
+  <script src="js/pubmap.js"></script>
+  <script src="js/publications.js"></script>
+</body>
+</html>

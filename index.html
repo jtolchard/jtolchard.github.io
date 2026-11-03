@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>James Tolchard</title>
+  <meta name="description" content="James Tolchard: NMR spectroscopy, structural biology and scientific software. Publications, code and projects.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page-home">
+  <header class="nav">
+    <div class="wrap-wide">
+      <a class="brand" href="index.html"><img src="assets/favicon.svg" width="22" height="22" alt=""><span class="brand-name">James Tolchard</span></a>
+      <nav class="nav-links" aria-label="Main">
+        <a class="nav-home" href="index.html" aria-current="page">Home</a>
+        <a href="publications.html">Publications</a>
+        <a href="code.html">Code</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="hero-name">
+    <div class="wrap">
+      <h1>James Tolchard</h1>
+    </div>
+  </div>
+
+  <main>
+    <section class="hero" id="hero">
+      <div class="hero-stage">
+        <div class="hero-band">
+          <canvas class="hero-signal" role="img" aria-label="An NMR signal that records as you scroll, then turns into its spectrum"></canvas>
+        </div>
+        <div class="wrap tagline-row">
+          <p class="tagline"><span>NMR spectroscopy ·</span> <span>structural biology ·</span> <span>scientific software</span></p>
+          <p class="scroll-hint" aria-hidden="true">scroll to acquire ↓</p>
+        </div>
+        <div class="wrap prose hero-intro" id="about">
+          <!-- Your photo: replace assets/profile.jpg (square, face centred). -->
+          <img class="about-photo" src="assets/profile.jpg" width="104" height="104" alt="James Tolchard">
+          <p>
+            I am a permanent research engineer at the
+            <a href="https://www.crmn-lyon.fr/" target="_blank" rel="noopener">Centre de
+            Résonance Magnétique Nucléaire à Très Hauts Champs (CRMN)</a> in Lyon, France, where I am part of the
+            team that looks after the instrumentation and the helium recovery system, and helps
+            train the researchers who come to use high-field solution-state NMR. As a member of
+            the <a href="https://www.hmrlab.eu/" target="_blank" rel="noopener">HMRLab</a>
+            hyperpolarisation group, I also help bring new high-field and dissolution-DNP
+            methods into routine use.
+          </p>
+          <p>
+            Before Lyon, I spent three years as a biocurator at the Protein Data Bank in
+            Europe (EMBL-EBI), where, alongside my curation work, I helped represent the NMR
+            community on data integrity, deposition and improving the validation of NMR structures.
+            I trained in structural biology, with a PhD at the University of East Anglia and
+            five years as a postdoc in Bordeaux, using solution and solid-state NMR to study
+            membrane proteins, amyloids and bacterial secretion systems. I also write
+            scientific software; some of it is on the <a href="code.html">Code page</a>.
+          </p>
+        </div>
+        <div class="wrap hero-links">
+          <!-- Publications shows your newest paper; Code rolls through data/code.js (js/latest.js). -->
+          <section class="panel" aria-labelledby="panel-pubs">
+            <header class="panel-head">
+              <h3 id="panel-pubs"><a href="publications.html">Publications</a></h3>
+              <a class="panel-all" href="publications.html">all papers →</a>
+            </header>
+            <div class="latest-paper" data-latest-paper></div>
+          </section>
+          <section class="panel" aria-labelledby="panel-code">
+            <header class="panel-head">
+              <h3 id="panel-code"><a href="code.html">Code</a></h3>
+              <a class="panel-all" href="code.html">all projects →</a>
+            </header>
+            <p class="panel-sub">Open-source tools for NMR analysis and everyday lab computing.</p>
+            <div class="marquee" data-projects aria-label="Coding projects"></div>
+          </section>
+          <ul class="elsewhere">
+            <li><a href="https://github.com/jtolchard" rel="me noopener" target="_blank">GitHub</a></li>
+            <li><a href="https://www.linkedin.com/in/jamestolchard/" rel="me noopener" target="_blank">LinkedIn</a></li>
+            <li><a href="https://www.researchgate.net/profile/James-Tolchard" rel="me noopener" target="_blank">ResearchGate</a></li>
+            <li><a href="https://scholar.google.com/citations?user=0Bq9WmoAAAAJ" rel="me noopener" target="_blank">Google Scholar</a></li>
+            <li><a href="https://orcid.org/0000-0002-5779-4935" rel="me noopener" target="_blank">ORCID</a></li>
+            <li><a href="https://www.thingiverse.com/jtolchard/designs" rel="me noopener" target="_blank">Thingiverse</a></li>
+          </ul>
+        </div>
+        <!-- On Home the footer belongs to the held first screen, so it always sits
+             right under the links, however tall the window. -->
+        <footer class="foot">
+          <div class="wrap-wide">© 2026 James Tolchard · Plain HTML and JavaScript, hosted on GitHub Pages</div>
+        </footer>
+      </div>
+      <div class="hero-hold" aria-hidden="true"></div>
+    </section>
+  </main>
+
+
+  <script src="js/nmr.js"></script>
+  <script src="js/plot.js"></script>
+  <script src="data/publications.js"></script>
+  <script src="data/code.js"></script>
+  <script src="data/spectra.js"></script>
+  <script src="js/hero.js"></script>
+  <script src="js/latest.js"></script>
+</body>
+</html>

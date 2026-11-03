@@ -1,0 +1,5 @@
+# Claude's local preview settings (not part of the site)
+.claude/
+
+# macOS folder files
+.DS_Store

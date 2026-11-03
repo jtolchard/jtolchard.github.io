@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Animation preview</title>
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap">
+  <link rel="stylesheet" href="../css/style.css">
+  <!--
+    A workbench for paper animations: anims/preview.html?name=<name>
+    shows anims/<name>.js (or a built-in) at the sizes the Publications page
+    uses, in the light and dark colours, side by side. Not linked from the site.
+  -->
+  <style>
+    .lab { max-width: 1480px; margin: 0 auto; padding: 32px var(--gutter) 72px; }
+    .lab h1 { font-size: 2rem; }
+    .lab-lede { color: var(--ink-soft); font-size: 16px; margin: 8px 0 0; max-width: 70ch; }
+    .lab-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin: 20px 0 24px; font-family: var(--mono); font-size: 13px; color: var(--muted); }
+    .lab-bar label { display: inline-flex; align-items: center; gap: 8px; }
+    .lab-bar input, .lab-bar button { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 4px 10px; }
+    .lab-bar button { cursor: pointer; }
+    .lab-bar button:hover { border-color: var(--accent); color: var(--accent); }
+    .lab-bar input[type="range"] { padding: 0; width: 220px; accent-color: var(--accent); }
+    .lab-time { min-width: 6ch; color: var(--ink); }
+    .lab-msg { font-family: var(--mono); font-size: 13px; color: var(--accent); margin: 0 0 16px; }
+    .lab-row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 18px; padding: 18px; margin: 0 0 18px; border-radius: 12px; border: 1px solid; }
+    .lab-row h2 { width: 100%; margin: 0; font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; }
+    .lab-row figure { margin: 0; }
+    .lab-row .frame { border: 1px solid; border-radius: 10px; overflow: hidden; }
+    .lab-row canvas { display: block; }
+    .lab-row figcaption { font-family: var(--mono); font-size: 12px; margin-top: 6px; }
+    .lab-swatches { border-collapse: collapse; font-size: 14px; margin-top: 10px; }
+    .lab-swatches th, .lab-swatches td { text-align: left; padding: 6px 14px 6px 0; border-top: 1px solid var(--rule); vertical-align: middle; }
+    .lab-swatches th { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--muted); border-top: 0; }
+    .lab-swatches code { font-family: var(--mono); font-size: 13px; }
+    .chip { display: inline-block; width: 14px; height: 14px; border-radius: 4px; border: 1px solid var(--rule); vertical-align: -2px; margin-right: 6px; }
+    .lab h3 { font-size: 1.3rem; margin-top: 36px; }
+  </style>
+</head>
+<body>
+  <main class="lab">
+    <h1>Animation preview</h1>
+    <p class="lab-lede">Shows one animation at the sizes the Publications page gives it, in the light and dark colours. Your own animations live in <code>anims/&lt;name&gt;.js</code>; see <code>anims/README.md</code>.</p>
+
+    <div class="lab-bar">
+      <label>animation <input id="name" list="names" size="18" spellcheck="false"></label>
+      <datalist id="names"></datalist>
+      <button id="play" type="button">pause</button>
+      <label>t <input id="scrub" type="range" min="0" max="20" step="0.01" value="0"></label>
+      <span class="lab-time" id="time">0.00 s</span>
+      <button id="still" type="button" title="The frame visitors who ask for reduced motion see">still frame (t = 3.1 s)</button>
+    </div>
+    <p class="lab-msg" id="msg" hidden></p>
+    <div id="rows"></div>
+
+    <h3>Colours</h3>
+    <p class="lab-lede">Use these through <code>th</code> (e.g. <code>th.spec</code>), never as hex values, so the animation follows light and dark mode. They come from <code>css/style.css</code>.</p>
+    <table class="lab-swatches" id="swatches"><thead><tr><th>th.</th><th>role</th><th>light</th><th>dark</th></tr></thead><tbody></tbody></table>
+  </main>
+
+  <script src="../js/plot.js"></script>
+  <script src="../js/anim.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    const SIZES = [
+      { w: 660, h: 495, label: 'tablet (panel above the text)' },
+      { w: 417, h: 312, label: 'desktop' },
+      { w: 292, h: 219, label: 'phone' },
+      { w: 237, h: 177, label: 'small phone' }
+    ];
+    const ROLES = [
+      ['ink', '--ink', 'main lines, outlines, key labels'],
+      ['soft', '--ink-soft', 'secondary text'],
+      ['muted', '--muted', 'labels, ticks, dashed guides'],
+      ['rule', '--rule', 'frames, axis lines'],
+      ['grid', '--grid', 'faint grid lines'],
+      ['bg', '--bg', 'the panel behind the animation (leave it clear)'],
+      ['surface', '--surface', 'fills for solid objects'],
+      ['fid', '--fid', 'blue: time domain, signals, "before"'],
+      ['spec', '--spec', 'orange: frequency domain, results, emphasis'],
+      ['mono', '--mono', 'label font (12px)']
+    ];
+
+    // The light and dark colours, read from the site's stylesheet.
+    function palettes() {
+      const light = {}, dark = {};
+      const copy = (style, into) => { for (const p of style) if (p.startsWith('--')) into[p] = style.getPropertyValue(p).trim(); };
+      for (const sheet of document.styleSheets) {
+        let rules;
+        try { rules = sheet.cssRules; } catch (e) { continue; } // the font sheet can't be read; fine
+        for (const r of rules) {
+          if (r.selectorText === ':root') copy(r.style, light);
+          else if (r.media && /prefers-color-scheme:\s*dark/.test(r.media.mediaText)) {
+            for (const rr of r.cssRules) if (rr.selectorText === ':root') copy(rr.style, dark);
+          }
+        }
+      }
+      const th = v => Object.fromEntries(ROLES.map(([k, css]) => [k, v[css] || '']));
+      return { light: th(light), dark: th({ ...light, ...dark }) };
+    }
+    const P = palettes();
+
+    const params = new URLSearchParams(location.search);
+    const name = params.get('name') || 'template';
+    const input = document.getElementById('name');
+    input.value = name;
+    input.addEventListener('change', () => { location.search = `?name=${encodeURIComponent(input.value.trim())}`; });
+    const msg = document.getElementById('msg');
+    const say = text => { msg.textContent = text; msg.hidden = !text; };
+
+    // One row per colour scheme, one panel per size.
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const panels = [];
+    const rows = document.getElementById('rows');
+    for (const [scheme, th] of [['light', P.light], ['dark', P.dark]]) {
+      const row = document.createElement('section');
+      row.className = 'lab-row';
+      Object.assign(row.style, { background: th.surface, borderColor: th.rule, color: th.muted });
+      row.innerHTML = `<h2>${scheme}</h2>`;
+      for (const s of SIZES) {
+        const fig = document.createElement('figure');
+        const frame = document.createElement('div');
+        frame.className = 'frame';
+        Object.assign(frame.style, { background: th.bg, borderColor: th.rule });
+        const c = document.createElement('canvas');
+        c.style.width = `${s.w}px`; c.style.height = `${s.h}px`;
+        c.width = Math.round(s.w * dpr); c.height = Math.round(s.h * dpr);
+        const ctx = c.getContext('2d');
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        frame.append(c);
+        const cap = document.createElement('figcaption');
+        cap.textContent = `${s.label} · ${s.w}×${s.h}`;
+        fig.append(frame, cap);
+        row.append(fig);
+        panels.push({ ctx, w: s.w, h: s.h, th });
+      }
+      rows.append(row);
+    }
+
+    // Colour table
+    const tbody = document.querySelector('#swatches tbody');
+    for (const [k, css, role] of ROLES) {
+      const cell = v => k === 'mono' ? `<code>${v.split(',')[0]}</code>` : `<span class="chip" style="background:${v}"></span><code>${v}</code>`;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td><code>${k}</code></td><td>${role}</td><td>${cell(P.light[k])}</td><td>${cell(P.dark[k])}</td>`;
+      tbody.append(tr);
+    }
+
+    // Playback
+    let fn = null, t = 0, playing = true, last = performance.now();
+    const play = document.getElementById('play');
+    const scrub = document.getElementById('scrub');
+    const time = document.getElementById('time');
+    const pause = () => { playing = false; play.textContent = 'play'; };
+    play.addEventListener('click', () => { playing = !playing; play.textContent = playing ? 'pause' : 'play'; last = performance.now(); });
+    scrub.addEventListener('input', () => { pause(); t = +scrub.value; });
+    document.getElementById('still').addEventListener('click', () => { pause(); t = 3.1; scrub.value = t; });
+
+    function draw() {
+      for (const p of panels) {
+        try { fn(p.ctx, p.w, p.h, t, p.th); }
+        catch (err) { fn = null; say(`"${name}" threw an error at t = ${t.toFixed(2)} s: ${err.message} (details in the console)`); console.error(err); return; }
+      }
+    }
+    function frame(now) {
+      if (playing) {
+        t += (now - last) / 1000;
+        scrub.value = t % +scrub.max;
+      }
+      last = now;
+      time.textContent = `${t.toFixed(2)} s`;
+      if (fn) draw();
+      requestAnimationFrame(frame);
+    }
+
+    Anim.load(name, '').then(ok => {
+      document.getElementById('names').innerHTML = ['template', ...Anim.names()].filter((n, i, a) => a.indexOf(n) === i).map(n => `<option value="${n}">`).join('');
+      if (!ok) { say(`No animation called "${name}": add anims/${name}.js, which calls Anim.register("${name}", …).`); return; }
+      fn = Anim.get(name);
+      document.title = `${name} · Animation preview`;
+      requestAnimationFrame(frame);
+    });
+  })();
+  </script>
+</body>
+</html>

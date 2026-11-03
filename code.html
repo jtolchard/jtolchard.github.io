@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Code · James Tolchard</title>
+  <meta name="description" content="Coding projects by James Tolchard, with the context behind each one.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="nav">
+    <div class="wrap-wide">
+      <a class="brand" href="index.html"><img src="assets/favicon.svg" width="22" height="22" alt=""><span class="brand-name">James Tolchard</span></a>
+      <nav class="nav-links" aria-label="Main">
+        <a class="nav-home" href="index.html">Home</a>
+        <a href="publications.html">Publications</a>
+        <a href="code.html" aria-current="page">Code</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="page-head">
+      <h1>Projects</h1>
+      <p class="lede">
+        The tools behind the papers, with the context a repository listing leaves out:
+        why each one exists and where it has been used.
+      </p>
+      <p class="terminal" aria-hidden="true"><span class="prompt">$</span> <span id="term-cmd"></span><span class="cursor"></span></p>
+    </section>
+
+    <ul id="repo-list" class="repo-list"></ul>
+    <noscript><p>This list is built with JavaScript. Please enable it to see the projects.</p></noscript>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap-wide">© 2026 James Tolchard · Plain HTML and JavaScript, hosted on GitHub Pages</div>
+  </footer>
+
+  <script src="data/code.js"></script>
+  <script src="js/code.js"></script>
+</body>
+</html>
