@@ -325,7 +325,8 @@ window.PUBLICATIONS = [
     subtitle: "A review of the challenges and opportunities in opening NMR facilities to remote access, a shift accelerated by the COVID-19 pandemic.",
     journal: "Prog. Nucl. Magn. Reson. Spectrosc. 152–153, 101595",
     authors: "Tolchard J, Le Marchand T, Aspers RLEG, Batta G, Bechinger B, Brath U, Chasapi SA, Čikoš A, Ecsedi K, Favier A, Ferreira ASD, Fiala R, Georgiopoulou PD, Gómez JS, Jaudzems K, Karlsson G, Kentgens APM, Lambregts SFH, Morelli F, Mulder FAA, Natarajan SV, Persson C, Pierattelli R, Pons M, Raya J, Redfield C, Smrečki V, Spyroulias GA, Trébosc J, Vallet A, van Heijenoort C, van Ingen H, Vosegaard T, Wirmer-Bartoschek J, Schwalbe H, Lesage A, Pintacuda G",
-    doi: "10.1016/j.pnmrs.2026.101595"
+    doi: "10.1016/j.pnmrs.2026.101595",
+    media: { type: "animation", name: "remote-nmr-2026", alt: "A sample tube is driven by truck from the user's lab to a distant NMR facility, passes a safety check and goes into the magnet; the user's commands travel to the spectrometer over the network, and the recorded signal travels back to the user's laptop, where it becomes a spectrum." }
   },
   {
     id: "proton-dnp-2026",
@@ -336,6 +337,6 @@ window.PUBLICATIONS = [
     journal: "Angew. Chem. Int. Ed., e3761769",
     authors: "Tolchard J, Le Marchand T, El Mammeri N, Sharma K, Bishoyi AK, Berbon M, Jaudzems K, Wisser D, Daskalov A, Saupe SJ, Stanek J, Sun Z, Ouari O, Habenstein B, Lesage A, Pintacuda G, Loquet A",
     doi: "10.1002/anie.3761769",
-    media: { type: "animation", name: "proton-dnp-2026", alt: "A fibril strand dense with coupled protons gives a somewhat broad ¹H spectrum at 298 K and 12 kHz spinning, which broadens on cooling to 100 K. Spin dilution with ¹³CHD₂ methyls and then 40 kHz spinning resolve it; adding the DNP biradical broadens the peaks, and switching on the microwaves lifts the signal far above the noise. Finally, a distance between two methyl protons appears, linked to the two peaks it correlates." }
+    media: { type: "animation", name: "proton-dnp-2026", alt: "A fibril strand dense with coupled protons gives a somewhat broad ¹H spectrum at 298 K and 12 kHz spinning, which broadens on cooling to 100 K. Spin dilution with ¹³CHD₂ methyls and then 40 kHz spinning resolve it; adding the DNP biradical broadens the peaks, and switching on the microwaves lifts the signal far above the noise. Finally, two peaks are joined by a correlation, and the distance between the two methyl protons behind it appears." }
   }
 ];

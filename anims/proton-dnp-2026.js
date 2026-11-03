@@ -8,8 +8,8 @@
    5. The DNP biradical is added: the peaks broaden.
    6. Microwaves on: DNP lifts the signal far above the noise, and everything on
       the old scale (the noise, the dashed reference) shrinks.
-   7. A ¹H–¹H contact between two methyls lights up, with its distance, and
-      the two peaks it links are joined, as a correlation would show them.
+   7. Two peaks are joined, as a ¹H–¹H correlation would show them, and then
+      the contact between two methyls it comes from lights up, with its distance.
    ========================================================================== */
 (function () {
   'use strict';
@@ -22,7 +22,7 @@
   // The windows are when each change shows in the spectrum and the strand. The
   // readout for it (temperature, labelling, spinning) is highlighted and changes
   // LEAD seconds earlier, so the eye goes to the readout first, then to its effect.
-  const CYCLE = 19.25;
+  const CYCLE = 19.85;
   const LEAD = 0.6, SWAP = 0.5;   // readout leads its effect by LEAD, and takes SWAP to change
   const COOL = [1.6, 2.6];    // 298 K → 100 K, then a pause to see what cooling did
   const DIL = [4.2, 5.45];    // spin dilution
@@ -33,9 +33,12 @@
   const RAD = [9.5, 10.5];    // … then the peaks broaden
   const MW_IN = [10.9, 11.5]; // the microwaves travel in to the biradical
   const MW = [12.1, 13.1];    // … then DNP lifts the signal far above the noise
-  const DIST = [13.85, 14.95]; // a methyl–methyl distance and its correlation appear
-  const BACK = [17.35, 18.55]; // fade back to the start
-  const HOLD = [15.15, 17.15]; // the finished state; reduced-motion visitors see a moment from it (STILL, below)
+  // The last step: first the correlation joining two peaks, then the contact it comes from,
+  // with its distance, on the strand.
+  const LINK = [13.85, 14.65]; // the arc joining the two peaks draws in
+  const DIST = [14.85, 15.75]; // … then the methyl–methyl contact and its distance appear
+  const BACK = [17.95, 19.15]; // fade back to the start
+  const HOLD = [15.9, 17.8];   // the finished state; reduced-motion visitors see a moment from it (STILL, below)
 
   // The contact shown in the last step. Schematic: swap in a real methyl pair and
   // distance from the paper if you like.
@@ -304,7 +307,7 @@
     ctx.globalAlpha = 1;
 
     // the last step: one methyl–methyl contact lights up, with its distance
-    const reach = between(s, DIST[0], DIST[0] + 0.6) * keep, tag = between(s, DIST[0] + 0.4, DIST[0] + 0.9) * keep;
+    const reach = between(s, DIST[0], DIST[0] + 0.6) * keep, tag = between(s, DIST[0] + 0.4, DIST[1]) * keep;
     if (reach > 0) {
       const [p, q] = contact, a = (depth(p) + depth(q)) / 2;
       const ring = rH * 1.95 + 2.5;                                 // just outside a grown methyl dot
@@ -397,7 +400,7 @@
     ctx.globalAlpha = 1;
 
     // the two peaks the contact links, joined as a ¹H–¹H correlation would show them
-    const link = between(s, DIST[0] + 0.3, DIST[1]) * keep;
+    const link = between(s, ...LINK) * keep;
     if (link > 0) {
       const fw = Math.exp(lf), am = Math.exp(la);
       const tip = i => {
