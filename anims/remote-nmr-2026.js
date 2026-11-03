@@ -219,7 +219,10 @@
     const start = [sx1 - sw * 0.2, sy0 - tl / 2 - 5];
     const route = [start, [start[0], yTop], [mx, yTop], [mx, coreTop - tl / 2 - 3]];
     ctx.strokeStyle = th.muted; ctx.lineWidth = 1; ctx.setLineDash([3, 4]);
-    ctx.beginPath(); route.forEach((p, i) => (i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); ctx.stroke();
+    // drawn all the way down to the top of the bore tower, so it runs on into the bore without a gap
+    // (the tube itself stops a little above, at route[3], before it goes in)
+    const road = [...route.slice(0, 3), [mx, coreTop]];
+    ctx.beginPath(); road.forEach((p, i) => (i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); ctx.stroke();
     ctx.setLineDash([]);
     const TL = Math.max(18, w * 0.06);                         // the truck's length
     const ckx = mx - Math.max(40, w * 0.17);                  // the safety check, on the road
