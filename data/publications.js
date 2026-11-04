@@ -286,7 +286,8 @@ window.PUBLICATIONS = [
     subtitle: "ModelCIF, the data standard for depositing, archiving and sharing computationally predicted structure models.",
     journal: "J. Mol. Biol. 435(14), 168021",
     authors: "Vallat B, Tauriello G, Bienert S, Haas J, Webb BM, Žídek A, Zheng W, Peisach E, Piehl DW, Anischanka I, Sillitoe I, Tolchard J, Varadi M, Baker D, Orengo C, Zhang Y, Hoch JC, Kurisu G, Patwardhan A, Velankar S, Burley SK, Sali A, Schwede T, Berman HM, Westbrook JD",
-    doi: "10.1016/j.jmb.2023.168021"
+    doi: "10.1016/j.jmb.2023.168021",
+    media: { type: "animation", name: "modelcif-2023", alt: "A structure file's card: first the sections the PDB's PDBx/mmCIF format already has (coordinates, molecules, software and authors), beside a computed model; then the sections ModelCIF adds, each with a picture of what it holds: the target–template alignment, the modelling steps, linked files such as MSAs, and model quality, where the model colours by its per-residue confidence (pLDDT) and its pair-error (PAE) map builds" }
   },
   {
     id: "sifts-2023",
