@@ -297,7 +297,8 @@ window.PUBLICATIONS = [
     subtitle: "Residue-level annotations from UniProtKB and other resources, made available directly within PDB structure files through SIFTS.",
     journal: "Sci. Data 10, 204",
     authors: "Choudhary P, Anyango S, Berrisford J, Tolchard J, Varadi M, Velankar S",
-    doi: "10.1038/s41597-023-02101-6"
+    doi: "10.1038/s41597-023-02101-6",
+    media: { type: "animation", name: "sifts-2023", alt: "A protein's UniProtKB sequence above several PDB entries of it, each a fragment numbered its own way (one with an expression tag, one with a loop not modelled), so the same tryptophan is W155 in one and W140 in another. SIFTS maps each entry onto the sequence: the entries slide into place, their numbers become UniProtKB numbers and both tryptophans become W179; CATH domains, a parent domain split in two by an inserted one, then carry down onto every entry. Finally the rows move up and the fullest entry turns in 3D below, coloured by the same domains, with the inserted domain sitting between the parent's two parts" }
   },
   {
     id: "pdb-drug-design-2024",
