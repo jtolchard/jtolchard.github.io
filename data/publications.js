@@ -130,7 +130,7 @@ window.PUBLICATIONS = [
     journal: "Biochemistry 64(5), 1146–1156",
     authors: "Tolchard J, Chambers VS, Boutemy LS, Banfield MJ, Blumenschein TMA",
     doi: "10.1021/acs.biochem.4c00660",
-    media: { type: "animation", name: "contour", alt: "2D spectrum appearing as increments are acquired" }
+    media: { type: "animation", name: "avr3a11-2025", alt: "AVR3a11's NMR structure built from NOE and dihedral restraints into an ensemble of 20 models, then its dynamics with per-residue data on three timescales: ps–ns relaxation is uniform; ms–s exchange singles out the N-terminus and loop 3; H/D exchange protection marks helices II–IV, the WY domain, as the stable core" }
   },
   {
     id: "ddnp-batteries-2025",
