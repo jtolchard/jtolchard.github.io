@@ -119,7 +119,8 @@ window.PUBLICATIONS = [
     subtitle: "How the experimental restraints behind NMR structures in the Protein Data Bank are validated.",
     journal: "Structure 32(6), 824–837",
     authors: "Baskaran K, Ploskon E, Tejero R, Yokochi M, Harrus D, Liang Y, Peisach E, Persikova I, Ramelot TA, Sekharan M, Tolchard J, Westbrook JD, Bardiaux B, Schwieters CD, Patwardhan A, Velankar S, Burley SK, Kurisu G, Hoch JC, Montelione GT",
-    doi: "10.1016/j.str.2024.02.011"
+    doi: "10.1016/j.str.2024.02.011",
+    media: { type: "animation", name: "restraint-validation-2024", alt: "Restraint files in the community formats (CYANA, Xplor-NIH, ARIA, NEF) deposited through OneDep as one NMR-STAR file, a copy archived at the BMRB; each restraint then checked against the model (green satisfied, orange small violations, red large), the restraint counts shown by category, and knowledge-based checks (Ramachandran outliers, clashes, bond lengths, chemical shifts) filling the percentile sliders, all ending in a wwPDB validation report" }
   },
   {
     id: "avr3a11-2025",
