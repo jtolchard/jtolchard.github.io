@@ -5,7 +5,7 @@
    Microwaves polarise the ¹H next to the walls and spin diffusion carries it
    inward; cross polarisation hands it to the ¹³C of the acetate (orange);
    hot D₂O then melts the sample and the molecules escape. Each one is either
-   still hyperpolarised (orange) or has relaxed (grey ring), and from the end
+   still hyperpolarised (orange) or has relaxed (grey), and from the end
    of CP until it leaves the pore its odds fade, fastest near the radical-
    lined walls. The 4 nm pores start with more hyperpolarised (more TEMPO, and
    nothing far from it) but, with every molecule close to a wall, lose more on
@@ -21,9 +21,11 @@
   const TAU = Math.PI * 2;
 
   /* ---- the two pores (from the paper's optimal samples) ---- */
+  // bleach: how far in (nm) the TEMPO bleaches the polarisation once the microwaves stop; solid, liquid: how fast it
+  // does there (per second, frozen and melted); any: how fast polarisation fades anywhere once melted
   const PORES = [
-    { nm: 4, tempo: 34, fill: 1.2, reach: 1, count: 60 },     // HYPSO 5-4-34
-    { nm: 28, tempo: 18, fill: 2.1, reach: 0.8, count: 210 }  // HYPSO 5-28-18: ¹H builds up more slowly, and less far in
+    { nm: 4, tempo: 34, fill: 1.2, reach: 1, count: 60, bleach: 1.0, solid: 0.5, liquid: 1.0, any: 0.09 },     // HYPSO 5-4-34
+    { nm: 28, tempo: 18, fill: 2.1, reach: 0.8, count: 210, bleach: 2.0, solid: 2.0, liquid: 0.5, any: 0 }    // HYPSO 5-28-18: ¹H builds up more slowly, and less far in
   ];
 
   /* ---- timing (seconds into the loop): a round in each pore, then the comparison ---- */
@@ -46,7 +48,7 @@
     const r = rand(17 + k * 101), n = p.count, out = [];
     for (let i = 0; i < n; i++) {
       const across = (r() - 0.5) * (p.nm - 1.2);
-      out.push({ along: 0.04 + 0.92 * r(), across, wall: p.nm / 2 - Math.abs(across), late: 0.6 * r(), cx: r(), cy: r(), chance: r() });
+      out.push({ k, along: 0.04 + 0.92 * r(), across, wall: p.nm / 2 - Math.abs(across), late: 0.6 * r(), cx: r(), cy: r(), chance: r() });
     }
     return out;
   });
@@ -57,18 +59,35 @@
   const near = d => Math.exp(-d / 0.9);  // how near a radical-lined wall, at d nm from it
   const QUENCH_CP = 0.45;                // less ¹³C from CP right by the wall (the paper: paramagnetic shifts there)
   const REACH = 12;                      // nm: ¹H polarisation spreads in from the walls, so a wide pore's middle gets less
-  const LOSS_SOLID = 0.5, LOSS_LIQUID = 1.0, LOSS_ANY = 0.09;   // per second: near a wall while frozen, near a wall once melted, anywhere
   const atCP = m => (1 - QUENCH_CP * near(m.wall)) * Math.exp(-m.wall / REACH);
   const leaves = m => GO + m.late + CROSS * (1 - m.along);      // when (in the round) it gets out of the pore
   // from the moment the RF stops until it leaves the pore, a molecule's polarisation fades
   const odds = (m, u) => {
-    const wallLoss = Math.exp(-m.wall / 1.0), stop = Math.min(u, leaves(m));
+    const Q = PORES[m.k], wallLoss = Math.exp(-m.wall / Q.bleach), stop = Math.min(u, leaves(m));
     const solid = Math.max(0, Math.min(stop, MELT[0]) - CP[1]), liquid = Math.max(0, stop - MELT[0]);
-    return atCP(m) * Math.exp(-(LOSS_SOLID * wallLoss * solid + (LOSS_LIQUID * wallLoss + LOSS_ANY) * liquid));
+    return atCP(m) * Math.exp(-(Q.solid * wallLoss * solid + (Q.liquid * wallLoss + Q.any) * liquid));
   };
   // the share polarised after CP, and the share that arrives still hyperpolarised: 4 nm 83 % → 42 %, 28 nm 55 % → 41 %
   const AT_CP = MOLECULES.map(ms => ms.filter(m => atCP(m) > m.chance).length / ms.length);
   const ARRIVE = MOLECULES.map(ms => ms.filter(m => odds(m, 99) > m.chance).length / ms.length);
+  // when each molecule that relaxes on its way out turns grey: at evenly spaced moments from the end of CP until the
+  // last of them leaves, so the bars fall steadily all that time; each while it is still in the pore, nearest the
+  // TEMPO first
+  const FADE = 0.4;                                        // seconds to turn from orange to grey
+  MOLECULES.forEach((ms, k) => {
+    const r = rand(29 + k * 7), end = m => leaves(m) - FADE;
+    for (const m of ms) { m.on = atCP(m) > m.chance; m.kept = odds(m, 99) > m.chance; m.key = m.wall / PORES[k].bleach + r(); }
+    const lost = ms.filter(m => m.on && !m.kept), free = new Set(lost), last = Math.max(...lost.map(end));
+    for (let j = lost.length - 1; j >= 0; j--) {          // the latest moments first, to those furthest from the walls
+      const at = CP[1] + ((j + 0.5) / lost.length) * (last - CP[1]);
+      const can = [...free].filter(m => end(m) >= at), pick = (can.length ? can : [...free]).reduce((a, b) => (b.key > a.key ? b : a));
+      pick.fade = Math.min(at, end(pick)); free.delete(pick);
+    }
+  });
+  // how hyperpolarised a molecule looks at time u in its round (1: hyperpolarised, 0: relaxed)
+  const look = (m, u, lit) => lit * (!m.on ? 0 : m.kept ? 1 : 1 - ease((u - m.fade) / FADE));
+  // the bars, for a pore at time u in its round: [share polarised after CP, share still hyperpolarised]
+  const shares = (k, u, lit) => MOLECULES[k].reduce((a, m) => [a[0] + lit * m.on, a[1] + look(m, u, lit)], [0, 0]).map(x => x / MOLECULES[k].length);
 
   /* ---- how the silica is drawn ---- */
   const WALLS = 'network';                 // 'slab' (flat), 'network' (amorphous Si–O, tethered TEMPO) or 'grains' (fused silica particles)
@@ -129,14 +148,18 @@
     const barH = Math.max(7, h * 0.022), caption = w >= 400;
     const meterH = 2 * barH + 6 + (caption ? 18 : 0);
     const top = ly + 16, bot = h - pad - meterH - 8;
-    const cy = (top + bot) / 2, pxNm = ((bot - top) * 0.82) / 28, half = (nm * pxNm) / 2;
+    const cy = (top + bot) / 2, pxNm = ((bot - top) * 0.82) / 28;
     const x0 = 0, mouth = pad + 0.6 * (w - 2 * pad), len = mouth - pad;
-    const rr = Math.max(1.3, Math.min(2.8, w * 0.0048));
+    const rr = Math.max(1.3, Math.min(2.8, w * 0.0048));    // TEMPO, as dots
+    const rs = Math.max(1.9, Math.min(3, w * 0.0058));       // the molecules
 
     /* ---- the pore's walls wander, and so does the sphere's outer surface ---- */
-    const bend = Math.min((0.08 * nm + 0.3) * pxNm, 0.05 * (bot - top)), swell = Math.min(0.06 * nm * pxNm, 0.035 * (bot - top));   // (capped: the walls stay inside the frame)
-    const mid = x => cy + bend * (0.65 * Math.sin((TAU * 1.1 * x) / w + 0.4) + 0.35 * Math.sin((TAU * 2.6 * x) / w + 2.0));
-    const wid = x => half + swell * (0.6 * Math.sin((TAU * 1.9 * x) / w + 1.3) + 0.4 * Math.sin((TAU * 4.1 * x) / w + 0.2));
+    const shape = n => {                                   // the pore's middle and half-width, for a pore n nm wide
+      const half = (n * pxNm) / 2, bend = Math.min((0.08 * n + 0.3) * pxNm, 0.05 * (bot - top)), swell = Math.min(0.06 * n * pxNm, 0.035 * (bot - top));   // (capped: the walls stay inside the frame)
+      return [x => cy + bend * (0.65 * Math.sin((TAU * 1.1 * x) / w + 0.4) + 0.35 * Math.sin((TAU * 2.6 * x) / w + 2.0)),
+              x => half + swell * (0.6 * Math.sin((TAU * 1.9 * x) / w + 1.3) + 0.4 * Math.sin((TAU * 4.1 * x) / w + 0.2))];
+    };
+    const [mid, wid] = shape(nm);
     const yT = x => mid(x) - wid(x), yB = x => mid(x) + wid(x);   // the top and bottom walls
     const xM = y => mouth + Math.max(1.5, w * 0.007) * Math.sin((TAU * 2.2 * (y - top)) / (bot - top) + 0.8);   // the outer surface
     const step = Math.max(3, w / 160);
@@ -169,11 +192,14 @@
     /* ---- the frozen sample in the pore, and its ¹H polarisation spreading in from the walls ---- */
     const frozen = 1 - melt;
     if (frozen > 0.01) inBead(() => { ctx.globalAlpha = frozen; ctx.fillStyle = mix(th.bg, th.fid, 0.07); ctx.beginPath(); channel(ctx); ctx.fill(); ctx.globalAlpha = 1; });
-    const spread = P.reach * between(u, MW[0] + 0.3, MW[0] + 0.3 + P.fill) * frozen * (1 - 0.35 * between(u, CP[1], MELT[0])) * (s < WIDEN[0] || second ? 1 : 0);
-    if (spread > 0.01) {
+    // how far in the ¹H polarisation has spread, and how strong it still is: strong after DNP, fading clearly from the
+    // end of CP (the polarisation is being lost) and gone once the sample has melted
+    const spread = P.reach * between(u, MW[0] + 0.3, MW[0] + 0.3 + P.fill) * (s < WIDEN[0] || second ? 1 : 0);
+    const glow = frozen * (1 - 0.7 * between(u, CP[1], MELT[0]));
+    if (spread > 0.01 && glow > 0.01) {
       inBead(() => {
         // ten bands from each wall inward, each a little lighter: brightest towards the walls
-        ctx.fillStyle = rgba(th.spec, 0.043);
+        ctx.fillStyle = rgba(th.spec, 0.075 * glow);
         for (let b = 1; b <= 10; b++) {
           const f = (spread * b) / 10;
           for (const [wall, sgn] of [[yT, 1], [yB, -1]]) {
@@ -184,7 +210,7 @@
         // ... but right by the radicals the ¹H are quenched (shifted out of view): a dimmer layer about 0.9 nm deep
         ctx.fillStyle = mix(th.bg, th.fid, 0.07);
         for (const [q, a] of [[0.9, 0.35], [0.45, 0.35]]) {
-          ctx.globalAlpha = a * spread;
+          ctx.globalAlpha = a * spread * glow;
           for (const [wall, sgn] of [[yT, 1], [yB, -1]]) {
             const inner = x => wall(x) + sgn * Math.min(q * pxNm, 0.45 * (yB(x) - yT(x)));
             ctx.beginPath(); ctx.moveTo(x0, wall(x0)); curve(ctx, wall, x0, mouth + 6); curve(ctx, inner, mouth + 6, x0); ctx.closePath(); ctx.fill();
@@ -227,24 +253,36 @@
         const slope = (wall(x + 1) - wall(x - 1)) / 2, nl = Math.hypot(slope, 1);
         const nx = (sgn * slope) / nl, ny = -sgn / nl, tilt = n % 2 ? 0.35 : -0.35;
         const dx = nx * Math.cos(tilt) - ny * Math.sin(tilt), dy = nx * Math.sin(tilt) + ny * Math.cos(tilt);
-        const L = 0.55 * pxNm, ring = Math.max(2, 0.24 * pxNm);
+        const L = 0.55 * pxNm, ring = Math.max(2.6, 0.32 * pxNm);
         const ex = x + dx * L, ey = wy + dy * L, rx = ex + dx * ring, ry = ey + dy * ring;
         ctx.strokeStyle = mix(th.bg, th.ink, 0.6); ctx.lineWidth = 1;
         ctx.beginPath(); ctx.moveTo(x, wy); ctx.lineTo(x + dx * L * 0.5 + dy * 0.8, wy + dy * L * 0.5 - dx * 0.8); ctx.lineTo(ex, ey); ctx.stroke();
         ctx.beginPath();
         for (let q = 0; q < 6; q++) { const a = Math.atan2(dy, dx) + Math.PI + (q * TAU) / 6; ctx[q ? 'lineTo' : 'moveTo'](rx + ring * Math.cos(a), ry + ring * Math.sin(a)); }
-        ctx.closePath(); ctx.fillStyle = th.surface; ctx.fill(); ctx.strokeStyle = th.ink; ctx.stroke();
-        ctx.fillStyle = th.green; ctx.beginPath(); ctx.arc(rx + dx * ring, ry + dy * ring, Math.max(1.6, 0.14 * pxNm), 0, TAU); ctx.fill();
+        ctx.closePath(); ctx.fillStyle = th.green; ctx.fill(); ctx.strokeStyle = mix(th.green, th.ink, 0.45); ctx.stroke();
+        ctx.fillStyle = mix(th.green, th.ink, 0.45); ctx.beginPath(); ctx.arc(rx + dx * ring, ry + dy * ring, Math.max(1.6, 0.14 * pxNm), 0, TAU); ctx.fill();
       }
     }
-    // name TEMPO while there is room above the pore, on a plate of the background so the network doesn't show through
-    const tagY = Math.min(yT(pad), yT(pad + 40)) - 16;
-    if (nm < 6 && tagY - (top - 6) > 12) {
-      const tw = Anim.measure(ctx, th, 'TEMPO');
-      ctx.fillStyle = th.bg; ctx.globalAlpha = 0.92;
-      ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(pad - 4, tagY - 9, tw + 8, 18, 3); else ctx.rect(pad - 4, tagY - 9, tw + 8, 18); ctx.fill();
+    // name TEMPO, in bold, in the silica just above the top wall, in a bordered plate of the background so the network doesn't
+    // show through; it follows the wall as the pore widens, and fades out only where the silica is too thin for it
+    ctx.font = `700 12px ${th.mono}`;
+    const tw = ctx.measureText('TEMPO').width;
+    const highest = (f, xa) => { let m = Infinity; for (let x = xa - 4; x <= xa + tw + 4.01; x += 2) m = Math.min(m, f(x)); return m; };
+    // where it goes: at the left, unless the silica there is too thin above the wide pore; then where that is thickest
+    const [mid28, wid28] = shape(28), top28 = x => mid28(x) - wid28(x);
+    let tagX = pad;
+    if (highest(top28, pad) - 3 - (top - 6) < 16)
+      for (let x = pad, best = -Infinity; x <= pad + 0.3 * len; x += 2) { const m = highest(top28, x); if (m > best) { best = m; tagX = x; } }
+    const wallTop = highest(yT, tagX);
+    const strip = wallTop - 3 - (top - 6);                // the silica above the wall, clear of the TEMPO on it
+    const tagY = Math.max(top - 6 + strip / 2, wallTop - 13), tagA = Math.max(0, Math.min(1, (strip - 10) / 4));
+    if (tagA > 0.01) {
+      ctx.globalAlpha = 0.92 * tagA; ctx.fillStyle = th.bg;
+      ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(tagX - 4, tagY - 7, tw + 8, 14, 3); else ctx.rect(tagX - 4, tagY - 7, tw + 8, 14); ctx.fill();
+      ctx.globalAlpha = tagA; ctx.strokeStyle = th.green; ctx.lineWidth = 1; ctx.stroke();   // a fine border
+      ctx.fillStyle = th.green; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillText('TEMPO', tagX, tagY + 0.5);
       ctx.globalAlpha = 1;
-      Anim.label(ctx, th, 'TEMPO', pad, tagY, 'left', th.green);
     }
 
     /* ---- microwaves, then the CP pulse, along the top ---- */
@@ -257,14 +295,14 @@
     ctx.globalAlpha = 1;
 
     /* ---- the molecules: grey until CP lights them; then out of the pore, dimming near the walls ---- */
+    const relaxed = mix(th.bg, th.ink, 0.45);
     const lit = between(u, CP[0] + 0.2, CP[1]);
     const showMol = second ? 1 - between(s, SUMMARY[2], SUMMARY[3]) : 1 - between(s, WIDEN[0], WIDEN[0] + 0.3);
     const fresh = second ? between(s, ROUND[1], ROUND[1] + 0.4) : between(s, 0, 0.4);
     const outX0 = mouth + 14, outX1 = w - pad, outY0 = top + 10, outY1 = bot - 4;
-    let kept = 0;
     const mols = MOLECULES[k], speed = len / CROSS;
     // a molecule keeps its place across the pore as the pore wanders
-    const across = (m, x) => (yT(x) + yB(x)) / 2 + (m.across / Math.max(0.6, P.nm / 2 - 0.6)) * Math.max(0, (yB(x) - yT(x)) / 2 - rr - 1);
+    const across = (m, x) => (yT(x) + yB(x)) / 2 + (m.across / Math.max(0.6, P.nm / 2 - 0.6)) * Math.max(0, (yB(x) - yT(x)) / 2 - rs - 1);
     for (const m of mols) {
       const xh = mouth - len * (1 - m.along);
       const start = GO + m.late, inside = (mouth - xh) / speed;
@@ -276,48 +314,48 @@
         const tx = outX0 + (outX1 - outX0) * m.cx, ty = outY0 + (outY1 - outY0) * m.cy;
         x = mouth + (tx - mouth) * v; y = y0 + (ty - y0) * v;
       }
-      const p = lit * ease((odds(m, u) - m.chance) / 0.1 + 0.5);   // 1: hyperpolarised, 0: relaxed
-      if (moving >= inside) kept += p;
+      const p = look(m, u, lit);                           // 1: hyperpolarised, 0: relaxed
       const a = showMol * fresh;
       if (a < 0.01) continue;
-      // hyperpolarised: a solid orange dot; relaxed: a hollow grey ring
-      ctx.globalAlpha = a;
-      ctx.beginPath(); ctx.arc(x, y, rr, 0, TAU);
-      ctx.strokeStyle = mix(mix(th.bg, th.ink, 0.5), th.spec, p); ctx.lineWidth = Math.max(1, rr * 0.5); ctx.stroke();
-      if (p > 0.01) { ctx.globalAlpha = a * p; ctx.fillStyle = th.spec; ctx.fill(); }
+      // hyperpolarised: an orange dot; relaxed: a grey one
+      ctx.globalAlpha = a; ctx.fillStyle = mix(relaxed, th.spec, p);
+      ctx.beginPath(); ctx.arc(x, y, rs, 0, TAU); ctx.fill();
     }
     ctx.globalAlpha = 1;
-    const fraction = kept / mols.length;
 
     /* ---- the meters, centred in the space below the bead: how much ¹³C polarisation got out of each pore ---- */
     const spaceTop = bot + 6, blockTop = spaceTop + (h - spaceTop - meterH) / 2;
     const mTop = blockTop + (caption ? 18 : 0);
     const lw = Anim.measure(ctx, th, '28 nm') + 10, bx = pad + lw, bw = (w - 2 * pad - lw) * 0.74;
-    // the key (orange: still hyperpolarised; grey ring: relaxed), and what the bars show, as fits
+    // the key (orange: hyperpolarised; grey: relaxed), for the dots and the bars alike, and what the bars show, as fits
     let keyW = 0;
     if (caption) {
       const words = [['relaxed', false], ['hyperpolarised', true]];
-      keyW = words.reduce((a, [wd]) => a + Anim.measure(ctx, th, wd) + 2 * rr + 20, 0);
+      keyW = words.reduce((a, [wd]) => a + Anim.measure(ctx, th, wd) + 2 * rs + 20, 0);
       let kx = w - pad;
       for (const [word, solid] of words) {
         kx -= Anim.measure(ctx, th, word);
         Anim.label(ctx, th, word, kx, blockTop + 7, 'left', th.muted);
-        ctx.beginPath(); ctx.arc(kx - rr - 5, blockTop + 7, rr, 0, TAU);
-        if (solid) { ctx.fillStyle = th.spec; ctx.fill(); } else { ctx.strokeStyle = mix(th.bg, th.ink, 0.5); ctx.lineWidth = Math.max(1, rr * 0.5); ctx.stroke(); }
-        kx -= 2 * rr + 20;
+        ctx.beginPath(); ctx.arc(kx - rs - 5, blockTop + 7, rs, 0, TAU);
+        ctx.fillStyle = solid ? th.spec : relaxed; ctx.fill();
+        kx -= 2 * rs + 20;
       }
       const words2 = ['¹³C polarised: after CP → detection', '¹³C polarised'];
       Anim.label(ctx, th, words2.find(x => Anim.measure(ctx, th, x) + keyW + 12 <= w - 2 * pad) || words2[1], pad, blockTop + 7, 'left', th.muted);
     }
-    // for each pore: pale, the share polarised after CP; solid, the share still hyperpolarised at detection
-    const gone = 1 - between(s, SUMMARY[2], SUMMARY[3]);
-    const atcp = [second ? AT_CP[0] * gone : s < NARROW[0] ? AT_CP[0] * lit : 0, second ? AT_CP[1] * lit * gone : 0];
-    const vals = second ? [ARRIVE[0] * gone, fraction * gone] : [s < NARROW[0] ? fraction : 0, 0];
+    // for each pore, as its molecules: orange, the share still hyperpolarised; grey, the share that has relaxed since
+    // CP (together, the share polarised after CP); the first pore keeps its result through the second round, and
+    // both fade out with the summary at the end
+    const gone = 1 - between(s, SUMMARY[2], SUMMARY[3]), done = s >= NARROW[0];
+    const r0 = second || done ? shares(0, 99, 1) : shares(0, u, lit);
+    const r1 = second ? shares(1, u, lit) : done ? shares(1, 99, 1) : [0, 0];
+    const f = second || done ? gone : 1;
+    const atcp = [r0[0] * f, r1[0] * f], vals = [r0[1] * f, r1[1] * f];
     ['4 nm', '28 nm'].forEach((name, i) => {
       const y = mTop + i * (barH + 6);
       Anim.label(ctx, th, name, pad, y + barH / 2, 'left', (i === k && !summary) ? th.ink : th.soft);
       ctx.strokeStyle = th.rule; ctx.lineWidth = 1; ctx.strokeRect(bx + 0.5, y + 0.5, bw - 1, barH - 1);
-      if (atcp[i] > 0.002) { ctx.fillStyle = rgba(th.spec, 0.28); ctx.fillRect(bx, y, bw * atcp[i], barH); }
+      if (atcp[i] > 0.002) { ctx.fillStyle = relaxed; ctx.fillRect(bx, y, bw * atcp[i], barH); }
       if (vals[i] > 0.002) { ctx.fillStyle = th.spec; ctx.fillRect(bx, y, bw * vals[i], barH); }
       // at the end: how much each lost on the way out
       if (summary > 0.01) {
