@@ -12,8 +12,12 @@
    · ms–s: conformational exchange. The N-terminus and loop 3 lose their NMR
      peaks (tall bars; short bars are residues with minor peaks); the
      structure moves through six of the twenty models.
-   · min–h: H/D exchange. Protection factors (log scale) are high in helices
-     II–IV and low in helix I: the WY domain is the stable core.
+   · min–h: H/D exchange. In D₂O, a clock runs from 1 min to 24 h and each
+     measured amide fades as it loses its proton: those in helices I and IV
+     go first, while the most protected, facing the core of the WY domain,
+     last the day. Meanwhile the helices breathe: II–IV barely, helix I
+     swaying in and out of the bundle. The strip shows the protection
+     factors (log scale).
    Relaxation and protection values are read from Figures 5 and 4A of the
    paper; the exchanging residues are those it lists.
    ========================================================================== */
@@ -79,10 +83,17 @@
   const FAST = new Set([74, 75, 76, 78, 81, 82, 83, 84, 85, 87, 88, 90, 94, 102, 105, 111, 117, 118, 121, 123, 124, 125, 127, 128, 129, 131]);
   const protect = r => (PF[r] ? Math.max(0, Math.min(1, (Math.log10(PF[r]) - 2) / (Math.log10(3500) - 2))) : 0);   // 100 → 0, 3500 → 1
   const exchange = r => (BROAD.has(r) ? 1 : MINOR.has(r) ? 0.5 : 0);
+  // How long each measured amide keeps its proton in D₂O, in minutes. Schematic, but true to the paper: the
+  // 26 too fast to measure are gone before the first spectrum (4 min), all of helix I within the hour, and
+  // the rest in order of protection factor, so that Leu110 still shows clearly after 24 h.
+  const HELIX_I = new Set([77, 79, 80]);
+  const keepFor = r => FAST.has(r) ? 1 : HELIX_I.has(r) ? 8 + ((r * 7) % 5) * 2 : 30 * Math.pow(PF[r] / 200, 1.62);
+  const minutesAt = s => (s < CLOCK[0] ? 0 : Math.pow(1440, Math.min(1, (s - CLOCK[0]) / (CLOCK[1] - CLOCK[0]))));   // 1 min → 24 h, log scale
+  const clock = m => (m < 59.5 ? `${Math.max(1, Math.round(m))} min` : m < 600 ? `${(m / 60).toFixed(1)} h` : `${Math.round(m / 60)} h`);
 
   /* ---- timing (seconds into the loop) ---- */
-  const CYCLE = 29.4;
-  const SHOW = [0, 0.35, 28.6, 29.2];     // the whole picture fades in and, at the end, out
+  const CYCLE = 31.4;
+  const SHOW = [0, 0.35, 30.6, 31.2];     // the whole picture fades in and, at the end, out
   const RESTR = [0.4, 3.6];               // the restraints appear, one after another
   const FOLD = [3.6, 7.4];                // simulated annealing: the chain folds as they are met
   const RESTR_OUT = [7.4, 8.0];
@@ -91,8 +102,9 @@
   const FASTT = [10.6, 11.2, 14.8, 15.4]; // ps–ns: everything jiggles alike
   const EXCH = [15.4, 16.0, 22.0, 22.6];  // ms–s: the exchanging parts, and the ensemble
   const MORPH = [16.0, 22.0];             // ... moving through the six models and back to model 5
-  const HDX = [22.6, 23.2, 28.0, 28.6];   // min–h: protection
-  const STILL = 26;
+  const HDX = [22.6, 23.2, 30.0, 30.6];   // min–h: protection, ending on a long look at the WY core
+  const CLOCK = [23.4, 26.6];             // ... in D₂O: a clock runs from 1 min to 24 h, and the amides exchange
+  const STILL = 28.5;
 
   /* ---- small vector and colour helpers ---- */
   const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
@@ -131,6 +143,31 @@
   // the restraints in the order they appear (medium range first, building the helices, then long range)
   const RESTRAINTS = [...NOE_MED.map(p => [p, 0.8]), ...NOE_LONG.map(p => [p, 1.1])];
   const NOE_MAX = Math.max(...NOE_PER);
+
+  /* ---- the H/D step's breathing: each helix shifts in and out of the bundle (on screen), helix I the most ---- */
+  const SWAY = (() => {
+    const m = MODELS[0], mid = (a, b) => [0, 1].map(j => { let t = 0; for (let r = a; r <= b; r++) t += m[r - FIRST][j]; return t / (b - a + 1); });
+    const c = mid(70, LAST);
+    return HELICES.map(([a, b], h) => {
+      const p = mid(a, b), d = [p[0] - c[0], p[1] - c[1]], L = Math.hypot(d[0], d[1]) || 1;
+      return { out: [d[0] / L, d[1] / L], amp: h === 0 ? 1.8 : 0.25, hz: [0.33, 0.27, 0.35, 0.31][h], phase: [0, 2.6, 4.0, 1.1][h] };
+    });
+  })();
+  // how far residue r has moved (x, y, Å) at time u into the step; loops follow the helices either side of them
+  function sway(r, u) {
+    const at = h => {
+      const w = SWAY[h], k = w.amp * Math.sin(TAU * w.hz * u + w.phase);
+      const lever = h === 0 ? 0.7 + 0.3 * Math.max(0, Math.min(1, (83 - r) / 13)) : 1;     // helix I swings most at its free N-terminal end
+      return [w.out[0] * k * lever, w.out[1] * k * lever];
+    };
+    const h = helixOf(r);
+    if (h >= 0) return at(h);
+    if (r < HELICES[0][0]) return at(0);
+    if (r > HELICES[3][1]) return at(3);
+    const k = HELICES.findIndex(([a]) => a > r), [, e] = HELICES[k - 1], [b] = HELICES[k], f = (r - e) / (b - e);
+    const A = at(k - 1), B = at(k);
+    return [A[0] + (B[0] - A[0]) * f, A[1] + (B[1] - A[1]) * f];
+  }
 
   /* ---- cylinders: each helix's axis, from its Cα ---- */
   const RAD = 2.3;                                          // cylinder radius, Å
@@ -329,7 +366,7 @@
       // the chain wobbles in slow waves along its length (warmer as the annealing starts, cooling as it folds)
       const u = between(s, ...FOLD), heat = (0.6 + 0.7 * between(s, FOLD[0] - 0.8, FOLD[0] + 0.8)) * (1 - u);
       pos = UNFOLDED.map((p, i) => lerp3(p, MODELS[0][i], u).map((x, j) => x + heat * (
-        0.5 * Math.sin(TAU * 0.6 * s + i * 0.31 + j * 2.1) + 0.3 * Math.sin(TAU * 1.0 * s - i * 0.53 + j * 4.2) + 0.2 * Math.sin(TAU * 1.5 * s + i * 0.87 + j * 1.3))));
+        0.5 * Math.sin(TAU * 1.0 * s + i * 0.31 + j * 2.1) + 0.3 * Math.sin(TAU * 1.7 * s - i * 0.53 + j * 4.2) + 0.2 * Math.sin(TAU * 2.5 * s + i * 0.87 + j * 1.3))));
     } else if (s > MORPH[0] && s < MORPH[1]) {              // through the ensemble: model 5 → 6 → 10 → 19 → 9 → 1 → 5
       const steps = MODELS.length, u = ((s - MORPH[0]) / (MORPH[1] - MORPH[0])) * steps;
       const k = Math.min(steps - 1, Math.floor(u)), f = ease(Math.min(1, Math.max(0, (u - k - 0.12) / 0.76)));
@@ -346,7 +383,13 @@
         }
       }
     }
-    const tint = r => Math.max(fb * (BROAD.has(r) ? 1 : MINOR.has(r) ? 0.4 : 0), fc * protect(r));
+    if (fc > 0.001) {                                       // min–h: the helices breathe, helix I swaying in and out of the bundle
+      for (let i = 0; i < NRES; i++) { const d = sway(FIRST + i, s - HDX[0]); pos[i][0] += fc * d[0]; pos[i][1] += fc * d[1]; }
+    }
+    // in the H/D step, a residue is lit while its amide still has its proton
+    const minutes = minutesAt(s);
+    const kept = r => (PF[r] || FAST.has(r) ? (minutes ? Math.exp(-minutes / keepFor(r)) : 1) : 0);
+    const tint = r => Math.max(fb * (BROAD.has(r) ? 1 : MINOR.has(r) ? 0.4 : 0), fc * 0.95 * Math.sqrt(kept(r)));   // (square root: a half-exchanged band still reads)
 
     faded(ctx, show, g => {
       g.lineCap = 'round'; g.lineJoin = 'round';
@@ -434,7 +477,9 @@
       pair(between(s, FOLD[1] + 0.4, FOLD[1] + 0.7) * (1 - between(s, CYL[1] - 0.2, CYL[1] + 0.1)), ['20 NMR models', 'NMR models'], ['core RMSD 0.75 Å'], th.spec);
       pair(fa, ['ps–ns · ¹⁵N relaxation', 'ps–ns · relaxation', 'ps–ns'], ['uniform'], th.soft);
       pair(fb, ['ms–s · exchange', 'ms–s'], ['N-terminus, loop 3'], th.spec);
-      pair(fc, ['min–h · H/D protection', 'min–h · protection', 'min–h'], ['WY core'], th.spec);
+      const done = between(s, CLOCK[1] + 0.2, CLOCK[1] + 0.6);
+      pair(fc * (1 - done), ['min–h · H/D protection', 'min–h · protection', 'min–h'], [minutes ? `D₂O · ${clock(minutes)}` : 'into D₂O'], th.fid);
+      pair(fc * done, ['min–h · H/D protection', 'min–h · protection', 'min–h'], ['WY core'], th.spec);
 
       /* ---- on larger panels, what the strip shows, just above it ---- */
       if (caption) {
