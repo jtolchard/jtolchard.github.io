@@ -130,6 +130,7 @@ window.PUBLICATIONS = [
     journal: "Biochemistry 64(5), 1146–1156",
     authors: "Tolchard J, Chambers VS, Boutemy LS, Banfield MJ, Blumenschein TMA",
     doi: "10.1021/acs.biochem.4c00660",
+    links: [{ label: "PDB ↗", href: "https://www.ebi.ac.uk/pdbe/entry/pdb/3zgk" }],
     media: { type: "animation", name: "avr3a11-2025", alt: "AVR3a11's NMR structure built from NOE and dihedral restraints into an ensemble of 20 models, then its dynamics with per-residue data on three timescales: ps–ns relaxation is uniform; ms–s exchange singles out the N-terminus and loop 3; H/D exchange protection marks helices II–IV, the WY domain, as the stable core" }
   },
   {
@@ -315,7 +316,7 @@ window.PUBLICATIONS = [
     journal: "Chemistry–Methods 5(6), e202400068",
     authors: "Pokochueva EV, Le NH, Guibert S, Gioiosa C, Stern Q, Tolchard J, Bocquelet C, Cala O, Cavaillès M, Veyre L, Mankinen O, Telkki V, Thieuleux C, Jannin S",
     doi: "10.1002/cmtd.202400068",
-    media: { type: "animation", name: "precession", alt: "Magnetisation tipping and precessing on a Bloch sphere" }
+    media: { type: "animation", name: "hypso-pores-2025", alt: "A pore through a HYPSO silica sphere, its walls lined with TEMPO radicals: microwaves and cross polarisation hyperpolarise the acetate inside, then hot D₂O melts it and the molecules leave, those near the walls relaxing on the way. 4 nm pores start more polarised but lose about half; 28 nm pores lose about a quarter, so both arrive with the same ¹³C polarisation, with half the TEMPO" }
   },
   {
     id: "remote-nmr-2026",
