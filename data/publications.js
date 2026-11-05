@@ -109,7 +109,7 @@ window.PUBLICATIONS = [
     journal: "Proc. Natl. Acad. Sci. U.S.A. 120(6), e2212003120",
     authors: "Lamon G, Lends A, Valsecchi I, Sze S, Wong W, Duprès V, Lafont F, Tolchard J, Schmitt C, Mallet C, Mallet A, Grélard A, Morvan E, Dufourc EJ, Habenstein B, Guijarro JI, Aimanianda V, Loquet A",
     doi: "10.1073/pnas.2212003120",
-    media: { type: "animation", name: "pulse", alt: "Cross-polarisation pulse sequence" }
+    media: { type: "animation", name: "aspergillus-2023", alt: "The cell wall of an Aspergillus fumigatus spore in section, from dormant to swollen to germinating: its coat of rodlets on melanin breaks away, its rows of β-glucan (orange) and α-glucan (blue) beads re-balance at each stage while a row of chitin stays the same, and strands of galactosaminogalactan appear on germination. Below, a stylised ¹³C MAS NMR spectrum of the rigid wall shows the same change: the glucan peaks shift from 67/21 % to 47/41 % and back to 63/25 % while chitin holds at 12 %; each stage's spectrum is drawn in its own colour (dormant grey, swollen red, germinating green, as on the stage track) and kept as the next appears, and the peaks of mobile galactosaminogalactan, from a separate experiment on the same spores, rise on germination" }
   },
   {
     id: "restraint-validation-2024",
