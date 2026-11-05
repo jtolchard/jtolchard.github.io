@@ -98,7 +98,7 @@ window.PUBLICATIONS = [
     journal: "Commun. Biol. 5, 1202",
     authors: "Lends A, Daskalov A, Maleckis A, Delamare A, Berbon M, Grélard A, Morvan E, Shenoy J, Dutour A, Tolchard J, Noubhani A, Giraud MF, Sanchez C, Habenstein B, Guichard G, Compain G, Jaudzems K, Saupe SJ, Loquet A",
     doi: "10.1038/s42003-022-04175-1",
-    media: { type: "animation", name: "rotor", alt: "Rotor spinning at the magic angle" }
+    media: { type: "animation", name: "cellfree-amyloid-2022", alt: "A dialysis bag of cell-free reaction mix sits in its feeding mixture. The plasmid carrying the HET-s gene and E. coli ribosomes go into the bag, with NTPs, salts and co-factors, and ¹³C,¹⁵N-labelled glycine, valine and isoleucine go into the feeding mixture for selective labelling; over 18 hours HET-s chains are made at the ribosomes and each folds into a kinked layer of a straight fibril. The fibrils are spun down into a white pellet, washed with water and about half a milligram packed into a 0.7 mm rotor. The rotor tilts to the magic angle and spins at 100 kHz while a 2D hNH spectrum builds: the reference from recombinant fibrils labelled throughout in orange, then the cell-free sample's 16 labelled glycine, valine and isoleucine peaks in blue, each landing on its orange partner" }
   },
   {
     id: "aspergillus-2023",
