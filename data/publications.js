@@ -266,7 +266,8 @@ window.PUBLICATIONS = [
     subtitle: "A low-molecular-weight bolaamphiphile gel that triggers cancer-cell death through its interactions with cell membranes.",
     journal: "J. Colloid Interface Sci. 594, 857–863",
     authors: "Latxague L, Benizri S, Gaubert A, Tolchard J, Martinez D, Morvan E, Grélard A, Saad A, Habenstein B, Loquet A, Barthélémy P",
-    doi: "10.1016/j.jcis.2021.03.026"
+    doi: "10.1016/j.jcis.2021.03.026",
+    media: { type: "animation", name: "bolaamphiphile-gels-2021", alt: "The chemical structure of GNBA-F appears, its two glucose–thymidine heads in blue and its fluorinated core in green, then squeezes into a simple dumbbell: two blue heads (16 Å each) on a rigid green core (20 Å). It then joins many others assembling into the nanofibres of a supramolecular gel, while a plot shows its fluorine-19 solution NMR signal fading to nothing over about 7 hours as the molecules lock into the gel. At 37 °C a few single molecules leave the gel, drift down to a cell membrane and slide in, each spanning the lipid bilayer, and the membrane is disrupted. A second plot shows the lipids' carbon-13 solid-state NMR signal falling to about half over 16 hours. Finally the membrane blebs as the cancer cells die" }
   },
   {
     id: "pdbe-kb-2022",
