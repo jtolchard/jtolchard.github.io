@@ -276,7 +276,8 @@ window.PUBLICATIONS = [
     subtitle: "An overview of the databases and web services that PDBe and PDBe-KB provide for macromolecular structure data, for research and teaching.",
     journal: "Protein Sci. 31(10), e4439",
     authors: "Varadi M, Anyango S, Appasamy SD, Armstrong D, Bage M, Berrisford J, Choudhary P, Bertoni D, Deshpande M, Leines GD, Ellaway J, Evans G, Gaborova R, Gupta D, Gutmanas A, Harrus D, Kleywegt GJ, Bueno WM, Nadzirin N, Nair S, Pravda L, Afonso MQL, Sehnal D, Tanweer A, Tolchard J, Abrams C, Dunlop R, Velankar S",
-    doi: "10.1002/pro.4439"
+    doi: "10.1002/pro.4439",
+    media: { type: "animation", name: "pdbe-kb-2022", alt: "The PDBe infrastructure as in the paper's Figure 1: structures from depositors worldwide pass through the wwPDB's OneDep system, drawn as a train of turning gears; PDBe-KB partners drop in residue-level annotation files (over 80 million annotations for over 185,000 entries), which enrich each entry before it goes into PDBe's databases; then APIs (over 90 endpoints) send the data out to PDBe's entry pages and PDBe-KB's aggregated views of proteins, ligands and complexes. Finally, as in Figure 3, one entry page opens up: 1KPA, the human HINT1 dimer, with its sequence-feature tracks, topology diagram and 3D structure. A cursor moves along the tracks to lysine 92, which lies in the interface track and has a known variant, and the same residue lights up in a loop of the topology and at the dimer interface in 3D" }
   },
   {
     id: "modelcif-2023",
