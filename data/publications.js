@@ -310,7 +310,8 @@ window.PUBLICATIONS = [
     subtitle: "An introduction to the data in the PDB, how it is organised and curated, and how it supports computer-aided drug design.",
     journal: "Open Access Databases and Datasets for Drug Discovery (Wiley), 139–173",
     authors: "Armstrong D, Berrisford J, Choudhary P, Pravda L, Tolchard J, Varadi M, Velankar S",
-    doi: "10.1002/9783527830497.ch5"
+    doi: "10.1002/9783527830497.ch5",
+    media: { type: "animation", name: "pdb-drug-design-2024", alt: "A wall of small tiles fills in, each a structure from the PDB's 200,000-plus: proteins as blue blobs, DNA and RNA in green. The ones with a small molecule bound light up, their ligands orange. One opens up into a protein's binding pocket: a drug settles into it and its contacts appear, two hydrogen bonds and a hydrophobic contact. Then, for computer-aided drug design, a new green group grows from the drug into an empty sub-pocket and makes a new contact" }
   },
   {
     id: "hypso-pores-2025",
