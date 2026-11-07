@@ -9,6 +9,7 @@
      month      (optional)  1–12, to order papers within a year
      title      (required)
      subtitle   (optional)  a one-line, plain-language summary
+     subtitleEmphasis (optional) ordered phrases in the subtitle to italicize
      journal    (optional)
      authors    (optional)  your name (PUB_HIGHLIGHT below) is shown in bold
      doi        (optional)  e.g. "10.1038/s41586-020-1234-5"  (the title links to it)
@@ -116,7 +117,7 @@ window.PUBLICATIONS = [
     theme: "data",
     year: 2024, month: 6,
     title: "Restraint validation of biomolecular structures determined by NMR in the Protein Data Bank",
-    subtitle: "How the experimental restraints behind NMR structures in the Protein Data Bank are validated.",
+    subtitle: "Improving how the experimental restraints behind NMR structures in the Protein Data Bank are validated.",
     journal: "Structure 32(6), 824–837",
     authors: "Baskaran K, Ploskon E, Tejero R, Yokochi M, Harrus D, Liang Y, Peisach E, Persikova I, Ramelot TA, Sekharan M, Tolchard J, Westbrook JD, Bardiaux B, Schwieters CD, Patwardhan A, Velankar S, Burley SK, Kurisu G, Hoch JC, Montelione GT",
     doi: "10.1016/j.str.2024.02.011",
@@ -127,7 +128,7 @@ window.PUBLICATIONS = [
     theme: "solution",
     year: 2025, month: 3,
     title: "Dynamics in the Phytophthora capsici effector AVR3a11 confirm the core WY domain fold",
-    subtitle: "The solution structure and dynamics of AVR3a11, an effector from a plant pathogen, support the three-helix WY domain as its core fold.",
+    subtitle: "The NMR solution structure and dynamics of AVR3a11, an effector from a plant pathogen, support the three-helix WY domain as its core fold.",
     journal: "Biochemistry 64(5), 1146–1156",
     authors: "Tolchard J, Chambers VS, Boutemy LS, Banfield MJ, Blumenschein TMA",
     doi: "10.1021/acs.biochem.4c00660",
@@ -212,7 +213,8 @@ window.PUBLICATIONS = [
     theme: "solid-state",
     year: 2019, month: 3,
     title: "Structural and functional characterization of the type three secretion system (T3SS) needle of Pseudomonas aeruginosa",
-    subtitle: "In vivo, in vitro and in silico characterisation of the Pseudomonas aeruginosa type III secretion needle and its main building block.",
+    subtitle: "In vivo, in vitro, and in silico characterisation of the Pseudomonas aeruginosa type III secretion needle and its main building block.",
+    subtitleEmphasis: ["In vivo", "in vitro", "in silico"],
     journal: "Front. Microbiol. 10, 573",
     authors: "Lombardi C, Tolchard J, Bouillot S, Signor L, Gebus C, Liebl D, Fenel D, Teulon JM, Brock J, Habenstein B, Pellequer JL, Faudry E, Loquet A, Attrée I, Dessen A, Job V",
     doi: "10.3389/fmicb.2019.00573"
@@ -226,6 +228,7 @@ window.PUBLICATIONS = [
     journal: "Int. J. Mol. Sci. 20(19), 4682",
     authors: "Wahl LC, Watt JE, Yim HTT, De Bourcier D, Tolchard J, Soond SM, Blumenschein TMA, Chantry A",
     doi: "10.3390/ijms20194682",
+    links: [{ label: "PDB ↗", href: "https://www.ebi.ac.uk/pdbe/entry/pdb/6rss" }],
     media: { type: "animation", name: "contour", alt: "2D spectrum appearing as increments are acquired" }
   },
   {
@@ -319,7 +322,7 @@ window.PUBLICATIONS = [
     theme: "hyperpolarisation",
     year: 2025, month: 6,
     title: "Hybrid polarizing solids with extended pore diameters for dissolution dynamic nuclear polarization",
-    subtitle: "Porous hybrid polarizing solids, now with wider pores, that hyperpolarise samples for dissolution DNP without leaving the polarizing agent in the solution.",
+    subtitle: "Porous hybrid polarizing solids hyperpolarise samples for dissolution DNP without leaving the polarizing agent in the solution. This generation with wider pores decreases hyperpolarization losses upon melting, transfer, and filtration.",
     journal: "Chemistry–Methods 5(6), e202400068",
     authors: "Pokochueva EV, Le NH, Guibert S, Gioiosa C, Stern Q, Tolchard J, Bocquelet C, Cala O, Cavaillès M, Veyre L, Mankinen O, Telkki V, Thieuleux C, Jannin S",
     doi: "10.1002/cmtd.202400068",

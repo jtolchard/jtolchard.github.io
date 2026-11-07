@@ -107,7 +107,19 @@
       p.journal ? el('span', {}, p.journal) : null,
       themes[p.theme] ? el('span', { class: 'pub-theme' }, themes[p.theme]) : null);
     f('.pub-detail-title').replaceChildren(href ? el('a', { href, target: '_blank', rel: 'noopener' }, p.title) : p.title);
-    f('.pub-sub').textContent = p.subtitle || '';
+    const subtitle = p.subtitle || '';
+    const phrases = Array.isArray(p.subtitleEmphasis) ? p.subtitleEmphasis : [p.subtitleEmphasis];
+    const parts = [];
+    let end = 0;
+    for (const phrase of phrases) {
+      if (!phrase) continue;
+      const at = subtitle.indexOf(phrase, end);
+      if (at < 0) continue;
+      parts.push(subtitle.slice(end, at), el('em', {}, phrase));
+      end = at + phrase.length;
+    }
+    parts.push(subtitle.slice(end));
+    f('.pub-sub').replaceChildren(...parts);
     const au = f('.pub-authors');
     au.replaceChildren(...(p.authors ? authors(p.authors, true) : []));
     if (p.authors && p.authors.split(',').length > MAX_AUTHORS) au.title = p.authors; else au.removeAttribute('title');
@@ -125,6 +137,10 @@
     q('[data-step="-1"]').disabled = at <= 0;
     q('[data-step="1"]').disabled = at >= inPool.length - 1;
     showMedia(p);
+    if (dialog.open) {
+      if (shown) updateEnlarged();
+      else dialog.close();
+    }
     map.select(p);
     list.querySelectorAll('.cv-item.is-current').forEach(li => li.classList.remove('is-current'));
     const li = list.querySelector(`[data-id="${CSS.escape(p.id)}"]`);
@@ -148,11 +164,13 @@
 
   const bigCanvas = el('canvas', { role: 'img' });
   const closeBtn = el('button', { class: 'step-btn fig-dialog-close', type: 'button', 'aria-label': 'Close' }, '×');
+  const newerBtn = el('button', { class: 'step-btn fig-dialog-step is-newer', type: 'button', 'aria-label': 'Newer paper' }, '←');
+  const olderBtn = el('button', { class: 'step-btn fig-dialog-step is-older', type: 'button', 'aria-label': 'Older paper' }, '→');
   const playBtn = el('button', { type: 'button' }, 'pause');
   const scrub = el('input', { type: 'range', min: 0, max: 1000, step: 1, value: 0, 'aria-label': 'Position in the animation' });
   const bar = el('div', { class: 'fig-dialog-bar' }, playBtn, scrub);
   const dialog = el('dialog', { class: 'fig-dialog', 'aria-labelledby': 'fig-dialog-title' },
-    closeBtn,
+    closeBtn, newerBtn, olderBtn,
     el('div', { class: 'fig-dialog-inner' },
       el('div', { class: 'fig-dialog-left' },
         el('figure', { class: 'fig-dialog-media' }, bigCanvas),
@@ -167,22 +185,58 @@
   let big = null, loopLen = 0;
 
   const showPlaying = () => { playBtn.textContent = big && big.paused() ? 'play' : 'pause'; };
-  function enlarge() {
+  function positionEnlargedArrows() {
+    if (!dialog.open) return;
+    const figure = bigCanvas.parentElement.getBoundingClientRect();
+    const box = dialog.getBoundingClientRect();
+    dialog.style.setProperty('--fig-arrow-y', `${figure.top - box.top - dialog.clientTop + dialog.scrollTop + figure.height / 2}px`);
+  }
+  new ResizeObserver(positionEnlargedArrows).observe(bigCanvas.parentElement);
+
+  async function updateEnlarged() {
     const p = papers[current];
-    if (!p || !shown || typeof dialog.showModal !== 'function') return;
+    if (!p || !shown) return;
     fillInfo(dialog, p);
-    bigCanvas.setAttribute('aria-label', shown.alt);
-    loopLen = Anim.loop(shown.name);
-    bar.hidden = !loopLen;                   // no scrubber for an animation without a loop
-    playBtn.hidden = reduce.matches;         // reduced motion: it holds still, but can be scrubbed
-    dialog.showModal();
-    // after showModal, so the canvas has its size; the scrubber follows each frame
+    const inPool = pool(), at = inPool.indexOf(p);
+    newerBtn.disabled = at <= 0;
+    olderBtn.disabled = at >= inPool.length - 1;
+    let figure = { ...shown };
+    bigCanvas.setAttribute('aria-label', figure.alt);
+    bar.hidden = true;
+    scrub.value = '0';
+    loopLen = 0;
     if (!big) big = Anim.mount(bigCanvas, null, {
       onFrame: t => { if (loopLen) scrub.value = String(Math.round(((t % loopLen) / loopLen) * 1000)); }
     });
-    big.set(shown.name);                     // restarts it from the beginning
+    let ok = await big.set(figure.name);
+    if (!dialog.open || papers[current] !== p) return;
+    if (!ok) {
+      figure = { name: STAND_IN[p.theme] || 'precession', alt: 'Illustrative animation' };
+      await big.set(figure.name);
+      if (!dialog.open || papers[current] !== p) return;
+      bigCanvas.setAttribute('aria-label', figure.alt);
+    }
+    loopLen = Anim.loop(figure.name);
+    bar.hidden = !loopLen;
+    playBtn.hidden = reduce.matches;
     showPlaying();
+    positionEnlargedArrows();
   }
+  function enlarge() {
+    if (!papers[current] || !shown || typeof dialog.showModal !== 'function') return;
+    dialog.showModal();
+    updateEnlarged();
+  }
+  newerBtn.addEventListener('click', () => step(-1));
+  olderBtn.addEventListener('click', () => step(1));
+  document.addEventListener('keydown', e => {
+    if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    // Leave editing and the animation's time scrubber to their native keys.
+    if (e.target instanceof Element && e.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) return;
+    e.preventDefault();
+    step(e.key === 'ArrowLeft' ? -1 : 1);
+  });
   playBtn.addEventListener('click', () => { if (big.paused()) big.play(); else big.pause(); showPlaying(); });
   scrub.addEventListener('input', () => {
     big.pause();
@@ -231,6 +285,15 @@
       show(inPool.includes(papers[current]) ? papers[current] : inPool[0]);
     }
   });
+
+  // Follow the animation's centre rather than the variable-height article text.
+  function positionArrows() {
+    const figure = media.getBoundingClientRect();
+    const card = panel.getBoundingClientRect();
+    panel.style.setProperty('--pub-arrow-y', `${figure.top - card.top - panel.clientTop + figure.height / 2}px`);
+  }
+  new ResizeObserver(positionArrows).observe(media);
+  positionArrows();
 
   const fromHash = () => papers.find(p => p.id === decodeURIComponent(location.hash.slice(1)));
   const start = fromHash();

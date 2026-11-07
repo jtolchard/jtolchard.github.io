@@ -21,7 +21,7 @@
     .lab-lede { color: var(--ink-soft); font-size: 16px; margin: 8px 0 0; max-width: 70ch; }
     .lab-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin: 20px 0 24px; font-family: var(--mono); font-size: 13px; color: var(--muted); }
     .lab-bar label { display: inline-flex; align-items: center; gap: 8px; }
-    .lab-bar input, .lab-bar button { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 4px 10px; }
+    .lab-bar input, .lab-bar select, .lab-bar button { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 4px 10px; }
     .lab-bar button { cursor: pointer; }
     .lab-bar button:hover { border-color: var(--accent); color: var(--accent); }
     .lab-bar input[type="range"] { padding: 0; width: 220px; accent-color: var(--accent); }
@@ -47,8 +47,7 @@
     <p class="lab-lede">Shows one animation at the sizes the Publications page gives it, in the light and dark colours. Your own animations live in <code>anims/&lt;name&gt;.js</code>; see <code>anims/README.md</code>.</p>
 
     <div class="lab-bar">
-      <label>animation <input id="name" list="names" size="18" spellcheck="false"></label>
-      <datalist id="names"></datalist>
+      <label>animation <select id="name" aria-label="Animation"></select></label>
       <button id="play" type="button">pause</button>
       <label>t <input id="scrub" type="range" min="0" max="20" step="0.01" value="0"></label>
       <span class="lab-time" id="time">0.00 s</span>
@@ -64,6 +63,7 @@
 
   <script src="../js/plot.js"></script>
   <script src="../js/anim.js"></script>
+  <script src="../data/publications.js"></script>
   <script>
   (function () {
     'use strict';
@@ -111,7 +111,34 @@
     const params = new URLSearchParams(location.search);
     const name = params.get('name') || 'template';
     const input = document.getElementById('name');
+    // Keep direct links usable while the folder listing is being fetched.
+    input.add(new Option(name, name));
     input.value = name;
+
+    async function populateAnimations() {
+      const names = new Set(['template', ...Anim.names(), name]);
+      // Static hosts may not expose a directory listing. Papers supply a fallback.
+      for (const paper of window.PUBLICATIONS || []) {
+        if (paper.media && paper.media.type === 'animation') names.add(paper.media.name);
+      }
+      try {
+        const response = await fetch('./', { cache: 'no-store' });
+        if (!response.ok) throw new Error('Directory listing unavailable');
+        const listing = new DOMParser().parseFromString(await response.text(), 'text/html');
+        const folder = new URL('./', location.href);
+        for (const link of listing.querySelectorAll('a[href]')) {
+          const url = new URL(link.getAttribute('href'), folder);
+          if (url.origin !== folder.origin || !url.pathname.startsWith(folder.pathname)) continue;
+          const file = decodeURIComponent(url.pathname.slice(folder.pathname.length));
+          if (/^[\w-]+\.js$/.test(file)) names.add(file.slice(0, -3));
+        }
+      } catch (err) {
+        // The built-ins, publication animations and current selection remain available.
+      }
+      input.replaceChildren(...[...names].sort().map(n => new Option(n, n)));
+      input.value = name;
+    }
+    populateAnimations();
     input.addEventListener('change', () => { location.search = `?name=${encodeURIComponent(input.value.trim())}`; });
     const msg = document.getElementById('msg');
     const say = text => { msg.textContent = text; msg.hidden = !text; };
@@ -183,7 +210,6 @@
     }
 
     Anim.load(name, '').then(ok => {
-      document.getElementById('names').innerHTML = ['template', ...Anim.names()].filter((n, i, a) => a.indexOf(n) === i).map(n => `<option value="${n}">`).join('');
       if (!ok) { say(`No animation called "${name}": add anims/${name}.js, which calls Anim.register("${name}", …).`); return; }
       fn = Anim.get(name);
       stillBtn.textContent = `still frame (t = ${Anim.still(name)} s)`;

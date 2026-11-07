@@ -35,6 +35,11 @@
     <section class="pub-explorer" id="pub-explorer" aria-label="Map of papers and the selected paper">
       <div class="map-wrap"><canvas id="pub-map" role="img" aria-label="Map of papers by date and research theme. Use the left and right arrow keys to step through them."></canvas></div>
       <article class="pub-detail" id="pub-detail" aria-live="polite">
+        <div class="pub-detail-nav">
+          <button class="step-btn" type="button" data-step="-1" aria-label="Newer paper">←</button>
+          <span class="pub-detail-count"></span>
+          <button class="step-btn" type="button" data-step="1" aria-label="Older paper">→</button>
+        </div>
         <figure class="pub-detail-media"></figure>
         <div class="pub-detail-body">
           <p class="pub-meta"></p>
@@ -42,11 +47,6 @@
           <p class="pub-sub"></p>
           <p class="pub-authors"></p>
           <p class="pub-links"></p>
-          <div class="pub-detail-nav">
-            <button class="step-btn" type="button" data-step="-1" aria-label="Newer paper">←</button>
-            <span class="pub-detail-count"></span>
-            <button class="step-btn" type="button" data-step="1" aria-label="Older paper">→</button>
-          </div>
         </div>
       </article>
     </section>
