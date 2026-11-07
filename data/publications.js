@@ -256,7 +256,8 @@ window.PUBLICATIONS = [
     subtitle: "How PDBe enriches PDB data and makes macromolecular structures easier to find, access and analyse.",
     journal: "Nucleic Acids Res. 48(D1), D335–D343",
     authors: "Armstrong DR, Berrisford JM, Conroy MJ, Gutmanas A, Anyango S, Choudhary P, Clark AR, Dana JM, Deshpande M, Dunlop R, Gane P, Gáborová R, Gupta D, Haslam P, Koča J, Mak L, Mir S, Mukhopadhyay A, Nadzirin N, Nair S, Paysan-Lafosse T, Pravda L, Sehnal D, Salih O, Smart O, Tolchard J, Varadi M, Svobodova-Vařeková R, Zaki H, Kleywegt GJ, Velankar S",
-    doi: "10.1093/nar/gkz990"
+    doi: "10.1093/nar/gkz990",
+    media: { type: "animation", name: "pdbe-nar-2020", alt: "A search on PDBe, step by step. The archive's 155,000+ entries appear as a field of dots. Typing \"cytochrome\" into the advanced search form's molecule name field brings up autocomplete terms with their entry counts; picking cytochrome c peroxidase, mitochondrial pulls its 180 entries out of the archive as squares. Two more fields joined with AND narrow them: experimental method X-ray diffraction (177), then a resolution limit sliding from 3.1 to 1.5 Å, with each entry dropping out as the limit passes its own resolution (42 left). Sequence clustering then groups near-identical sequences: 7 clusters at 100 % identity, 2 at 95 % and 1 at 90 %, each shown by one representative in orange with the rest hidden. The last representative, PDB entry 3e2n, opens as a result card with its method and 1.30 Å resolution, its bound haem cofactor, its Pfam domain, its PDBe-KB link, buttons for the 3D view and downloads, and its own structure turning in 3D as a ribbon cartoon with the haem" }
   },
   {
     id: "bolaamphiphile-gels-2021",
