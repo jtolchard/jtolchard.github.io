@@ -87,7 +87,7 @@ window.PUBLICATIONS = [
     journal: "ACS Chem. Neurosci. 11(20), 3358–3365",
     authors: "Puig E, Tolchard J, Riera A, Carulla N",
     doi: "10.1021/acschemneuro.0c00470",
-    media: { type: "animation", name: "contour", alt: "2D spectrum appearing as increments are acquired" }
+    media: { type: "animation", name: "somatostatin-2020", alt: "Somatostatin (SST14), a cyclic 14-residue neuropeptide, is shown in ball and stick beside the βPFO tetramer, a β-sheet pore-forming oligomer of Aβ(1–42) whose sides sit in a detergent micelle. Under the title that the two show a specific 2:1 interaction, native mass spectrometry shows the tetramer's peaks, then new peaks for the tetramer with one and two somatostatin bound; isothermal titration calorimetry shows shrinking heats of injection, each dropping to a point on a binding isotherm, whose fit gives a dissociation constant of about 39 micromolar and two somatostatin per tetramer. Then, in a close-up of the NMR spectrum, the peaks that shift as somatostatin is added show each titration step overlaid, from blue to red (the shifts slightly exaggerated), and are marked with red dots; matching red dots light up on the tetramer, in its micelle, at its two exposed ends, and one somatostatin docks at each end, with dashed lines to the nearest of them" }
   },
   {
     id: "cellfree-amyloid-2022",
