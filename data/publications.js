@@ -164,7 +164,8 @@ window.PUBLICATIONS = [
     subtitle: "A methods chapter on producing the small hydrophobic subunits of yeast ATP synthase in milligram amounts by cell-free expression.",
     journal: "Methods Mol. Biol., 57–90",
     authors: "Larrieu I, Tolchard J, Sanchez C, Kone EY, Barras A, Stines-Chaumeil C, Odaert B, Giraud MF",
-    doi: "10.1007/978-1-4939-7151-0_4"
+    doi: "10.1007/978-1-4939-7151-0_4",
+    media: { type: "animation", name: "cellfree-atpase-2017", alt: "Cell-free expression produces hydrophobic yeast ATP-synthase subunit g as a collectable precipitate. LMPG solubilization provides a sample for NMR, where amide assignments and chemical-shift-derived helical propensity demonstrate its suitability for structural studies." }
   },
   {
     id: "rgd1-2017",
