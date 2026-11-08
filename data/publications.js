@@ -195,7 +195,8 @@ window.PUBLICATIONS = [
     subtitle: "Stabilising a pore-forming Aβ42 oligomer, first prepared in detergent micelles, so that its relevance to Alzheimer's disease can be tested.",
     journal: "Front. Mol. Biosci. 5, 38",
     authors: "Serra-Batiste M, Tolchard J, Giusti F, Zoonens M, Carulla N",
-    doi: "10.3389/fmolb.2018.00038"
+    doi: "10.3389/fmolb.2018.00038",
+    media: { type: "animation", name: "abeta-oligomer-2018", alt: "The βPFO Aβ42 oligomer is moved from detergent micelles into an amphipol, NAPol; its Met35 NMR fingerprint stays the same, and when both are diluted the detergent version falls apart into monomers while the NAPol one holds." }
   },
   {
     id: "bacillus-biofilms-2019",
