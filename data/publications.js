@@ -55,7 +55,7 @@ window.PUBLICATIONS = [
     journal: "Sci. Rep. 8, 1960",
     authors: "Tolchard J, Walpole SJ, Miles AJ, Maytum R, Eaglen LA, Hackstadt T, Wallace BA, Blumenschein TMA",
     doi: "10.1038/s41598-018-20290-8",
-    media: { type: "animation", name: "contour", alt: "2D spectrum appearing as increments are acquired" }
+    media: { type: "animation", name: "tarp-2018", alt: "Tarp is a Chlamydia effector protein previously known to bind actin, with its binding mechanism unresolved. Its flexible 726–825 region appears first as a black chain, then G-actin appears beside it, asking how this disordered region binds. An expanded scene aligns the PONDR ordered-region prediction, a low-RCI flexibility trough, positive secondary Cα shifts, and enhanced slow/intermediate reduced spectral density at 500 and 800 MHz over the region of helical propensity around residues 746–759. The plots are approximate values read from the published figures. The two partners fade out before the evidence band appears. In the final scene, the HSQC sits beside actin, with a panel-wide chemical shift perturbation profile underneath. Small shifts and peak weakening connect to this residue profile and highlight the Tarp 746–767 binding region. Additional CSP measurements connect directly to the highlighted helix residues as the proposed complex forms. The structure annotation reports Kd = 102 nanomolar and a 1:1 interaction by ITC. One Tarp helix then docks at the cleft of one actin molecular surface derived from PDB 2A40 chain A; the pose remains illustrative. Molecular motion illustrates the states, not a measured binding pathway." }
   },
   {
     id: "jbnmr-2018",
