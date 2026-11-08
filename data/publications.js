@@ -154,7 +154,8 @@ window.PUBLICATIONS = [
     subtitle: "A review of calcitonin's structural biology, from the hormone's therapeutic properties in solution to its aggregation into amyloid fibrils.",
     journal: "Isr. J. Chem. 57(7–8), 634–650",
     authors: "Kamgar-Parsi K, Tolchard J, Habenstein B, Loquet A, Naito A, Ramamoorthy A",
-    doi: "10.1002/ijch.201600096"
+    doi: "10.1002/ijch.201600096",
+    media: { type: "animation", name: "calcitonin-2017", alt: "Calcitonin is shown as a 32-residue hormone with its conserved disulfide loop. Solution NMR signal loss and rigid-residue solid-state NMR distinguish soluble and aggregated states. NMR-based cartoons illustrate a central helix-to-strand transition and pH-dependent fibril packing as one possible pathway reviewed in the article." }
   },
   {
     id: "cellfree-atpase-2017",
