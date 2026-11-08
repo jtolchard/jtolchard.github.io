@@ -229,7 +229,7 @@ window.PUBLICATIONS = [
     authors: "Wahl LC, Watt JE, Yim HTT, De Bourcier D, Tolchard J, Soond SM, Blumenschein TMA, Chantry A",
     doi: "10.3390/ijms20194682",
     links: [{ label: "PDB ↗", href: "https://www.ebi.ac.uk/pdbe/entry/pdb/6rss" }],
-    media: { type: "animation", name: "contour", alt: "2D spectrum appearing as increments are acquired" }
+    media: { type: "animation", name: "smad7-wwp2-2019", alt: "Human WWP2, an E3 ligase, tags Smad7, an inhibitor of TGFβ signalling, for destruction; NMR titrations then show WW3 binding Smad7 seven times more tightly next to WW4 (Kd 139 µM alone, 21 µM in tandem) while WW4 barely changes; WW4's NMR structure (PDB 6RSS) shows where Smad7 binds; and the newly found isoform WWP2C-ΔHECT, with both domains but no working HECT, may protect Smad7 rather than destroy it." }
   },
   {
     id: "assemblies-chapter-2019",
