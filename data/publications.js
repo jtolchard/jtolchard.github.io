@@ -175,7 +175,8 @@ window.PUBLICATIONS = [
     journal: "Biochem. J. 474(19), 3307–3319",
     authors: "Martinez D, Langlois d'Estaintot B, Granier T, Tolchard J, Courrèges C, Prouzet-Mauléon V, Hugues M, Gallois B, Doignon F, Odaert B",
     doi: "10.1042/bcj20170331",
-    media: { type: "animation", name: "contour", alt: "2D spectrum appearing as increments are acquired" }
+    links: [{ label: "PDB ↗", href: "https://www.ebi.ac.uk/pdbe/entry/pdb/5my3" }],
+    media: { type: "animation", name: "rgd1-2017", alt: "NMR peak shifts map a phosphoinositide-binding site within the folded Rgd1 RhoGAP domain. A headgroup docking model illustrates the site, and solid-state NMR shows a small decrease in membrane lipid order when PIP2 and the domain are both present." }
   },
   {
     id: "leucocyanidin-2018",
