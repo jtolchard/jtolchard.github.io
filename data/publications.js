@@ -185,7 +185,8 @@ window.PUBLICATIONS = [
     subtitle: "Producing the 3,4-cis and 3,4-trans stereoisomers of leucocyanidin, with NMR confirming their structures and MS/MS telling them apart.",
     journal: "J. Agric. Food Chem. 66(1), 351–358",
     authors: "Zhang JR, Tolchard J, Bathany K, Langlois d'Estaintot B, Chaudiere J",
-    doi: "10.1021/acs.jafc.7b04380"
+    doi: "10.1021/acs.jafc.7b04380",
+    media: { type: "animation", name: "leucocyanidin-2018", alt: "Leucocyanidin stereoisomers differ at C4. NMR shifts and coupling confirm their configurations; distinct tandem mass spectra distinguish them, including a cis-only m/z 139 fragment." }
   },
   {
     id: "abeta-oligomer-2018",
