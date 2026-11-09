@@ -232,7 +232,7 @@
     ctx.beginPath(); ctx.ellipse(c0[0], c0[1], r * 0.82, r * 0.26, rot, 0, Math.PI * 2); ctx.fill();
     ctx.globalAlpha = 1;
     label(ctx, th, 'MAS', e2[0] - px * r - 10, e2[1] - py * r + 14, 'right');
-  });
+  }, { loop: 10 / 9 });
 
   /* ---------- 2D spectrum, revealed by a sweeping increment ---------- */
   const peaks2D = (() => {

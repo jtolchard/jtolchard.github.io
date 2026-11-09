@@ -192,6 +192,7 @@
     dialog.style.setProperty('--fig-arrow-y', `${figure.top - box.top - dialog.clientTop + dialog.scrollTop + figure.height / 2}px`);
   }
   new ResizeObserver(positionEnlargedArrows).observe(bigCanvas.parentElement);
+  dialog.querySelector('.fig-dialog-inner').addEventListener('scroll', positionEnlargedArrows);
 
   async function updateEnlarged() {
     const p = papers[current];

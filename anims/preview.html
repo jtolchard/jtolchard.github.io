@@ -49,7 +49,7 @@
     <div class="lab-bar">
       <label>animation <select id="name" aria-label="Animation"></select></label>
       <button id="play" type="button">pause</button>
-      <label>t <input id="scrub" type="range" min="0" max="20" step="0.01" value="0"></label>
+      <label>t <input id="scrub" type="range" min="0" max="1" disabled step="0.01" value="0"></label>
       <span class="lab-time" id="time">0.00 s</span>
       <button id="still" type="button" title="The frame visitors who ask for reduced motion see">still frame (t = 3.1 s)</button>
     </div>
@@ -182,7 +182,7 @@
     }
 
     // Playback
-    let fn = null, t = 0, playing = true, last = performance.now();
+    let fn = null, t = 0, loopLen = 0, playing = true, last = performance.now();
     const play = document.getElementById('play');
     const scrub = document.getElementById('scrub');
     const time = document.getElementById('time');
@@ -190,7 +190,7 @@
     play.addEventListener('click', () => { playing = !playing; play.textContent = playing ? 'pause' : 'play'; last = performance.now(); });
     scrub.addEventListener('input', () => { pause(); t = +scrub.value; });
     const stillBtn = document.getElementById('still');
-    stillBtn.addEventListener('click', () => { pause(); t = Anim.still(name); scrub.value = t; });
+    stillBtn.addEventListener('click', () => { pause(); t = Anim.still(name); if (loopLen) t %= loopLen; scrub.value = t; });
 
     function draw() {
       for (const p of panels) {
@@ -201,10 +201,11 @@
     function frame(now) {
       if (playing) {
         t += (now - last) / 1000;
-        scrub.value = t % +scrub.max;
+        if (loopLen) t %= loopLen;
+        scrub.value = t;
       }
       last = now;
-      time.textContent = `${t.toFixed(2)} s`;
+      time.textContent = loopLen ? `${t.toFixed(2)} / ${loopLen} s` : `${t.toFixed(2)} s`;
       if (fn) draw();
       requestAnimationFrame(frame);
     }
@@ -212,6 +213,11 @@
     Anim.load(name, '').then(ok => {
       if (!ok) { say(`No animation called "${name}": add anims/${name}.js, which calls Anim.register("${name}", …).`); return; }
       fn = Anim.get(name);
+      loopLen = Anim.loop(name);
+      scrub.disabled = !loopLen;
+      scrub.max = String(loopLen || 1);
+      if (!loopLen) say('This animation has no declared loop duration; the time scrubber is unavailable.');
+      last = performance.now();
       stillBtn.textContent = `still frame (t = ${Anim.still(name)} s)`;
       document.title = `${name} · Animation preview`;
       requestAnimationFrame(frame);
