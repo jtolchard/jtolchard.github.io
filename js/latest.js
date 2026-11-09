@@ -55,8 +55,11 @@
       return el('article', { class: 'project-card' },
         el('h4', {}, pr.name),
         pr.language ? el('p', { class: 'project-meta' }, dot, pr.language) : null,
-        el('p', { class: 'project-text' }, pr.summary),
-        pr.github ? el('a', { class: 'project-link', href: pr.github, target: '_blank', rel: 'noopener' }, 'GitHub ↗') : null
+        el('p', { class: 'project-text' }, pr.summary,
+          pr.summaryFr ? el('br') : null,
+          pr.summaryFr ? el('span', { lang: 'fr' }, pr.summaryFr) : null),
+        pr.website ? el('a', { class: 'project-link', href: pr.website, target: '_blank', rel: 'noopener' }, `Try ${pr.name} ↗`)
+          : pr.github ? el('a', { class: 'project-link', href: pr.github, target: '_blank', rel: 'noopener' }, 'View on GitHub ↗') : null
       );
     };
     const set = el('div', { class: 'marquee-set' }, projects.map(card));
