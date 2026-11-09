@@ -44,7 +44,7 @@ window.PUBLICATIONS = [
     journal: "J. Vis. Exp. 127, e55779",
     authors: "Loquet A, Tolchard J, Berbon M, Martinez D, Habenstein B",
     doi: "10.3791/55779",
-    media: { type: "animation", name: "rotor", alt: "Rotor spinning at the magic angle" }
+    media: { type: "animation", name: "jove-2017", alt: "Isotope-labelled protein subunits form an insoluble filament for magic-angle spinning NMR. Illustrative PDSD correlations connect Ile32 and Thr33, then a mixed nitrogen-15/carbon-13 labelling experiment reveals contacts between subunits. A five-layer molecular fibre cartoon highlights a central backbone, with illustrative contacts between specific C-alpha positions and neighbouring subunits; distant layers fade into the background." }
   },
   {
     id: "tarp-2018",
