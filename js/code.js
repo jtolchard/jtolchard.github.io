@@ -70,37 +70,11 @@
     return svg;
   }
 
-  // Native modal provides focus containment and Escape-to-close behaviour.
-  const preview = el('dialog', { class: 'repo-preview', 'aria-labelledby': 'repo-preview-title' });
-  const previewTitle = el('h2', { id: 'repo-preview-title' });
-  const closePreview = el('button', { type: 'button', class: 'repo-preview-close' }, 'Close ×');
-  const previewImage = el('img', { class: 'repo-preview-image', alt: '' });
-  preview.append(el('div', { class: 'repo-preview-head' }, previewTitle, closePreview), previewImage);
-  document.body.append(preview);
-  let previewTrigger = null;
-  closePreview.addEventListener('click', () => preview.close());
-  preview.addEventListener('click', event => { if (event.target === preview) {
-    const rect = preview.getBoundingClientRect();
-    if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) preview.close();
-  } });
-  preview.addEventListener('close', () => { if (previewTrigger) previewTrigger.focus(); });
-
   function screenshot(project) {
-    const button = el('button', { type: 'button', class: 'repo-image-button',
-      'aria-label': `Enlarge ${project.name} screenshot`, 'aria-haspopup': 'dialog' },
-      el('img', { src: project.image.src, alt: project.image.alt,
-        width: project.image.width, height: project.image.height,
-        loading: 'lazy', decoding: 'async', class: 'repo-image' }),
-      el('span', { class: 'repo-image-hint' }, 'Enlarge screenshot ↗'));
-    button.addEventListener('click', () => {
-      previewTrigger = button;
-      previewTitle.textContent = `${project.name} screenshot`;
-      previewImage.src = project.image.src;
-      previewImage.alt = project.image.alt;
-      preview.showModal();
-      closePreview.focus();
-    });
-    return button;
+    return el('img', { src: project.image.src, alt: project.image.alt,
+      width: project.image.width, height: project.image.height,
+      loading: 'lazy', decoding: 'async',
+      class: project.image.frame === 'purple' ? 'repo-image repo-image-purple' : 'repo-image' });
   }
 
   const list = document.getElementById('repo-list');
@@ -117,7 +91,7 @@
     if (r.released) meta.append(el('span', {}, 'Released ', el('time', { datetime: r.released },
       new Date(r.released + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }))));
     if (r.github) meta.append(el('a', { class: 'repo-github', href: r.github, target: '_blank', rel: 'noopener' }, 'View on GitHub ↗'));
-    if (r.website) meta.append(el('a', { href: r.website, target: '_blank', rel: 'noopener' }, `Try ${r.name} ↗`));
+    if (r.website) meta.append(el('a', { href: r.website, target: '_blank', rel: 'noopener' }, r.name === 'NACRED' ? 'Essayer NACRED ↗' : `Try ${r.name} ↗`));
     if (r.paper) meta.append(el('a', { href: r.paper.href }, r.paper.label + ' →'));
 
     const item = el('li', { class: 'repo' },
@@ -129,7 +103,7 @@
         el('p', { class: 'repo-summary' }, r.summary || '',
           r.summaryFr ? el('br') : null,
           r.summaryFr ? el('span', { lang: 'fr' }, r.summaryFr) : null),
-        r.context ? el('p', { class: 'repo-context' }, r.context,
+        r.context ? el('p', { class: 'repo-context', lang: r.contextLang }, r.context,
           r.derivation ? ' ' : null,
           r.derivation ? el('em', {}, r.derivation) : null) : null,
         r.image ? screenshot(r) : null,

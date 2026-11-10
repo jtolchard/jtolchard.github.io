@@ -3,3 +3,6 @@
 
 # macOS folder files
 .DS_Store
+
+# Previous project screenshots kept locally
+/assets/projects/old/

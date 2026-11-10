@@ -50,16 +50,23 @@
   const projects = window.PROJECTS || [];
   if (strip && projects.length) {
     const card = pr => {
+      const image = pr.cardImage || pr.image;
       const dot = el('span', { class: 'lang-dot' });
       dot.style.background = LANG[pr.language] || 'var(--muted)';
-      return el('article', { class: 'project-card' },
-        el('h4', {}, pr.name),
-        pr.language ? el('p', { class: 'project-meta' }, dot, pr.language) : null,
-        el('p', { class: 'project-text' }, pr.summary,
-          pr.summaryFr ? el('br') : null,
-          pr.summaryFr ? el('span', { lang: 'fr' }, pr.summaryFr) : null),
-        pr.website ? el('a', { class: 'project-link', href: pr.website, target: '_blank', rel: 'noopener' }, `Try ${pr.name} ↗`)
-          : pr.github ? el('a', { class: 'project-link', href: pr.github, target: '_blank', rel: 'noopener' }, 'View on GitHub ↗') : null
+      return el('article', { class: image ? 'project-card project-card-with-image' : 'project-card' },
+        el('div', { class: 'project-card-copy' },
+          el('h4', {}, pr.name),
+          pr.language ? el('p', { class: 'project-meta' }, dot, pr.language) : null,
+          el('p', { class: 'project-text', lang: pr.homeSummaryLang }, pr.homeSummary || pr.summary,
+            !pr.homeSummary && pr.summaryFr ? el('br') : null,
+            !pr.homeSummary && pr.summaryFr ? el('span', { lang: 'fr' }, pr.summaryFr) : null),
+          pr.website ? el('a', { class: 'project-link', href: pr.website, target: '_blank', rel: 'noopener' }, pr.name === 'NACRED' ? 'Essayer NACRED ↗' : `Try ${pr.name} ↗`)
+            : pr.github ? el('a', { class: 'project-link', href: pr.github, target: '_blank', rel: 'noopener' }, 'View on GitHub ↗') : null
+        ),
+        image ? el('a', { class: 'project-thumbnail', href: 'code.html',
+          'aria-label': `See ${pr.name} details and screenshot` },
+          el('img', { src: image.src, alt: image.alt,
+            width: image.width, height: image.height, decoding: 'async' })) : null
       );
     };
     const set = el('div', { class: 'marquee-set' }, projects.map(card));
