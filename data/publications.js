@@ -66,7 +66,7 @@ window.PUBLICATIONS = [
     journal: "J. Biomol. NMR 70(3), 177–185",
     authors: "Tolchard J, Pandey MJ, Berbon M, Noubhani A, Saupe SJ, Nishiyama Y, Habenstein B, Loquet A",
     doi: "10.1007/s10858-018-0168-3",
-    media: { type: "animation", name: "pulse", alt: "Cross-polarisation pulse sequence" }
+    media: { type: "animation", name: "jbnmr-2018", alt: "A tiny fully protonated HET-s fibril sample is studied in a 1 mm rotor at 70 kHz magic-angle spinning. The H-to-C-to-C-to-H transfer illustrates the proton-detected double-quantum experiment; tyrosine Y281 carbon-correlation slices identify aromatic proton signals at 7.1 and 6.8 ppm." }
   },
   {
     id: "salmonella-2019",
