@@ -1,0 +1,3 @@
+
+# PDFs are binary assets; preserve their bytes and suppress text diffs.
+*.pdf binary

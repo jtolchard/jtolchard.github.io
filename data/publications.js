@@ -14,7 +14,7 @@
      authors    (optional)  your name (PUB_HIGHLIGHT below) is shown in bold
      doi        (optional)  e.g. "10.1038/s41586-020-1234-5"  (the title links to it)
      url        (optional)  link the title somewhere other than the DOI
-     links      (optional)  extra links: [{ label: "PDF", href: "assets/pdf/x.pdf" }]
+     links      (optional)  extra links: [{ label: "PDF", href: "assets/openaccess/x.pdf" }]
      id         (optional)  anchor for linking straight to a paper (publications.html#id)
      theme      (optional)  which row of the map it sits on: one of the keys in PUB_THEMES
      media      (optional)  one of:
@@ -44,6 +44,7 @@ window.PUBLICATIONS = [
     journal: "J. Vis. Exp. 127, e55779",
     authors: "Loquet A, Tolchard J, Berbon M, Martinez D, Habenstein B",
     doi: "10.3791/55779",
+    links: [{ label: "PDF ↗", href: "assets/openaccess/loquet-2017-jove.pdf" }],
     media: { type: "animation", name: "jove-2017", alt: "Isotope-labelled protein subunits form an insoluble filament for magic-angle spinning NMR. Illustrative PDSD correlations connect Ile32 and Thr33, then a mixed nitrogen-15/carbon-13 labelling experiment reveals contacts between subunits. A five-layer molecular fibre cartoon highlights a central backbone, with illustrative contacts between specific C-alpha positions and neighbouring subunits; distant layers fade into the background." }
   },
   {
@@ -55,6 +56,7 @@ window.PUBLICATIONS = [
     journal: "Sci. Rep. 8, 1960",
     authors: "Tolchard J, Walpole SJ, Miles AJ, Maytum R, Eaglen LA, Hackstadt T, Wallace BA, Blumenschein TMA",
     doi: "10.1038/s41598-018-20290-8",
+    links: [{ label: "PDF ↗", href: "assets/openaccess/tolchard-2018-tarp.pdf" }],
     media: { type: "animation", name: "tarp-2018", alt: "Tarp is a Chlamydia effector protein previously known to bind actin, with its binding mechanism unresolved. Its flexible 726–825 region appears first as a black chain, then G-actin appears beside it, asking how this disordered region binds. An expanded scene aligns the PONDR ordered-region prediction, a low-RCI flexibility trough, positive secondary Cα shifts, and enhanced slow/intermediate reduced spectral density at 500 and 800 MHz over the region of helical propensity around residues 746–759. The plots are approximate values read from the published figures. The two partners fade out before the evidence band appears. In the final scene, the HSQC sits beside actin, with a panel-wide chemical shift perturbation profile underneath. Small shifts and peak weakening connect to this residue profile and highlight the Tarp 746–767 binding region. Additional CSP measurements connect directly to the highlighted helix residues as the proposed complex forms. The structure annotation reports Kd = 102 nanomolar and a 1:1 interaction by ITC. One Tarp helix then docks at the cleft of one actin molecular surface derived from PDB 2A40 chain A; the pose remains illustrative. Molecular motion illustrates the states, not a measured binding pathway." }
   },
   {
@@ -77,6 +79,7 @@ window.PUBLICATIONS = [
     journal: "PLOS Biol. 17(7), e3000351",
     authors: "Guo EZ, Desrosiers DC, Zalesak J, Tolchard J, Berbon M, Habenstein B, Marlovits T, Loquet A, Galán JE",
     doi: "10.1371/journal.pbio.3000351",
+    links: [{ label: "PDF ↗", href: "assets/openaccess/guo-2019-salmonella.pdf" }],
     media: { type: "animation", name: "rotor", alt: "Rotor spinning at the magic angle" }
   },
   {
@@ -99,6 +102,7 @@ window.PUBLICATIONS = [
     journal: "Commun. Biol. 5, 1202",
     authors: "Lends A, Daskalov A, Maleckis A, Delamare A, Berbon M, Grélard A, Morvan E, Shenoy J, Dutour A, Tolchard J, Noubhani A, Giraud MF, Sanchez C, Habenstein B, Guichard G, Compain G, Jaudzems K, Saupe SJ, Loquet A",
     doi: "10.1038/s42003-022-04175-1",
+    links: [{ label: "PDF ↗", href: "assets/openaccess/lends-2022-cellfree.pdf" }],
     media: { type: "animation", name: "cellfree-amyloid-2022", alt: "A dialysis bag of cell-free reaction mix sits in its feeding mixture. The plasmid carrying the HET-s gene and E. coli ribosomes go into the bag, with NTPs, salts and co-factors, and ¹³C,¹⁵N-labelled glycine, valine and isoleucine go into the feeding mixture for selective labelling; over 18 hours HET-s chains are made at the ribosomes and each folds into a kinked layer of a straight fibril. The fibrils are spun down into a white pellet, washed with water and about half a milligram packed into a 0.7 mm rotor. The rotor tilts to the magic angle and spins at 100 kHz while a 2D hNH spectrum builds: the reference from recombinant fibrils labelled throughout in orange, then the cell-free sample's 16 labelled glycine, valine and isoleucine peaks in blue, each landing on its orange partner" }
   },
   {
@@ -110,6 +114,7 @@ window.PUBLICATIONS = [
     journal: "Proc. Natl. Acad. Sci. U.S.A. 120(6), e2212003120",
     authors: "Lamon G, Lends A, Valsecchi I, Wong SSW, Duprès V, Lafont F, Tolchard J, Schmitt C, Mallet A, Grélard A, Morvan E, Dufourc EJ, Habenstein B, Guijarro JI, Aimanianda V, Loquet A",
     doi: "10.1073/pnas.2212003120",
+    links: [{ label: "PDF ↗", href: "assets/openaccess/lamon-2023-aspergillus.pdf" }],
     media: { type: "animation", name: "aspergillus-2023", alt: "The cell wall of an Aspergillus fumigatus spore in section, from dormant to swollen to germinating: its coat of rodlets on melanin breaks away, its rows of β-glucan (orange) and α-glucan (blue) beads re-balance at each stage while a row of chitin stays the same, and strands of galactosaminogalactan appear on germination. Below, a stylised ¹³C MAS NMR spectrum of the rigid wall shows the same change: the glucan peaks shift from 67/21 % to 47/41 % and back to 63/25 % while chitin holds at 12 %; each stage's spectrum is drawn in its own colour (dormant grey, swollen red, germinating green, as on the stage track) and kept as the next appears, and the peaks of mobile galactosaminogalactan, from a separate experiment on the same spores, rise on germination" }
   },
   {
@@ -121,6 +126,7 @@ window.PUBLICATIONS = [
     journal: "Structure 32(6), 824–837",
     authors: "Baskaran K, Ploskon E, Tejero R, Yokochi M, Harrus D, Liang Y, Peisach E, Persikova I, Ramelot TA, Sekharan M, Tolchard J, Westbrook JD, Bardiaux B, Schwieters CD, Patwardhan A, Velankar S, Burley SK, Kurisu G, Hoch JC, Montelione GT",
     doi: "10.1016/j.str.2024.02.011",
+    links: [{ label: "PDF ↗", href: "assets/openaccess/baskaran-2024-restraint_validation.pdf" }],
     media: { type: "animation", name: "restraint-validation-2024", alt: "Restraint files in the community formats (CYANA, Xplor-NIH, ARIA, NEF) deposited through OneDep as one NMR-STAR file, a copy archived at the BMRB; each restraint then checked against the model (green satisfied, orange small violations, red large), the restraint counts shown by category, and knowledge-based checks (Ramachandran outliers, clashes, bond lengths, chemical shifts) filling the percentile sliders, all ending in a wwPDB validation report" }
   },
   {
@@ -132,7 +138,7 @@ window.PUBLICATIONS = [
     journal: "Biochemistry 64(5), 1146–1156",
     authors: "Tolchard J, Chambers VS, Boutemy LS, Banfield MJ, Blumenschein TMA",
     doi: "10.1021/acs.biochem.4c00660",
-    links: [{ label: "PDB ↗", href: "https://www.ebi.ac.uk/pdbe/entry/pdb/3zgk" }],
+    links: [{ label: "PDF ↗", href: "assets/openaccess/tolchard-2025-avr3a11.pdf" }, { label: "PDB ↗", href: "https://www.ebi.ac.uk/pdbe/entry/pdb/3zgk" }],
     media: { type: "animation", name: "avr3a11-2025", alt: "AVR3a11's NMR structure built from NOE and dihedral restraints into an ensemble of 20 models, then its dynamics with per-residue data on three timescales: ps–ns relaxation is uniform; ms–s exchange singles out the N-terminus and loop 3; H/D exchange protection marks helices II–IV, the WY domain, as the stable core" }
   },
   {
@@ -200,6 +206,7 @@ window.PUBLICATIONS = [
     journal: "Front. Mol. Biosci. 5, 38",
     authors: "Serra-Batiste M, Tolchard J, Giusti F, Zoonens M, Carulla N",
     doi: "10.3389/fmolb.2018.00038",
+    links: [{ label: "PDF ↗", href: "assets/openaccess/serra-batiste-2018-bpfo.pdf" }],
     media: { type: "animation", name: "abeta-oligomer-2018", alt: "The βPFO Aβ42 oligomer is moved from detergent micelles into an amphipol, NAPol; its Met35 NMR fingerprint stays the same, and when both are diluted the detergent version falls apart into monomers while the NAPol one holds." }
   },
   {
@@ -222,7 +229,8 @@ window.PUBLICATIONS = [
     subtitleEmphasis: ["In vivo", "in vitro", "in silico"],
     journal: "Front. Microbiol. 10, 573",
     authors: "Lombardi C, Tolchard J, Bouillot S, Signor L, Gebus C, Liebl D, Fenel D, Teulon JM, Brock J, Habenstein B, Pellequer JL, Faudry E, Loquet A, Attrée I, Dessen A, Job V",
-    doi: "10.3389/fmicb.2019.00573"
+    doi: "10.3389/fmicb.2019.00573",
+    links: [{ label: "PDF ↗", href: "assets/openaccess/lombardi-2019-t3ss.pdf" }]
   },
   {
     id: "smad7-wwp2-2019",
@@ -233,7 +241,7 @@ window.PUBLICATIONS = [
     journal: "Int. J. Mol. Sci. 20(19), 4682",
     authors: "Wahl LC, Watt JE, Yim HTT, De Bourcier D, Tolchard J, Soond SM, Blumenschein TMA, Chantry A",
     doi: "10.3390/ijms20194682",
-    links: [{ label: "PDB ↗", href: "https://www.ebi.ac.uk/pdbe/entry/pdb/6rss" }],
+    links: [{ label: "PDF ↗", href: "assets/openaccess/wahl-2019-smad7.pdf" }, { label: "PDB ↗", href: "https://www.ebi.ac.uk/pdbe/entry/pdb/6rss" }],
     media: { type: "animation", name: "smad7-wwp2-2019", alt: "Human WWP2, an E3 ligase, tags Smad7, an inhibitor of TGFβ signalling, for destruction; NMR titrations then show WW3 binding Smad7 seven times more tightly next to WW4 (Kd 139 µM alone, 21 µM in tandem) while WW4 barely changes; WW4's NMR structure (PDB 6RSS) shows where Smad7 binds; and the newly found isoform WWP2C-ΔHECT, with both domains but no working HECT, may protect Smad7 rather than destroy it." }
   },
   {
@@ -265,6 +273,7 @@ window.PUBLICATIONS = [
     journal: "Nucleic Acids Res. 48(D1), D335–D343",
     authors: "Armstrong DR, Berrisford JM, Conroy MJ, Gutmanas A, Anyango S, Choudhary P, Clark AR, Dana JM, Deshpande M, Dunlop R, Gane P, Gáborová R, Gupta D, Haslam P, Koča J, Mak L, Mir S, Mukhopadhyay A, Nadzirin N, Nair S, Paysan-Lafosse T, Pravda L, Sehnal D, Salih O, Smart O, Tolchard J, Varadi M, Svobodova-Vařeková R, Zaki H, Kleywegt GJ, Velankar S",
     doi: "10.1093/nar/gkz990",
+    links: [{ label: "PDF ↗", href: "assets/openaccess/armstrong-2020-pdbe.pdf" }],
     media: { type: "animation", name: "pdbe-nar-2020", alt: "A search on PDBe, step by step. The archive's 155,000+ entries appear as a field of dots. Typing \"cytochrome\" into the advanced search form's molecule name field brings up autocomplete terms with their entry counts; picking cytochrome c peroxidase, mitochondrial pulls its 180 entries out of the archive as squares. Two more fields joined with AND narrow them: experimental method X-ray diffraction (177), then a resolution limit sliding from 3.1 to 1.5 Å, with each entry dropping out as the limit passes its own resolution (42 left). Sequence clustering then groups near-identical sequences: 7 clusters at 100 % identity, 2 at 95 % and 1 at 90 %, each shown by one representative in orange with the rest hidden. The last representative, PDB entry 3e2n, opens as a result card with its method and 1.30 Å resolution, its bound haem cofactor, its Pfam domain, its PDBe-KB link, buttons for the 3D view and downloads, and its own structure turning in 3D as a ribbon cartoon with the haem" }
   },
   {
@@ -287,6 +296,7 @@ window.PUBLICATIONS = [
     journal: "Protein Sci. 31(10), e4439",
     authors: "Varadi M, Anyango S, Appasamy SD, Armstrong D, Bage M, Berrisford J, Choudhary P, Bertoni D, Deshpande M, Leines GD, Ellaway J, Evans G, Gaborova R, Gupta D, Gutmanas A, Harrus D, Kleywegt GJ, Bueno WM, Nadzirin N, Nair S, Pravda L, Afonso MQL, Sehnal D, Tanweer A, Tolchard J, Abrams C, Dunlop R, Velankar S",
     doi: "10.1002/pro.4439",
+    links: [{ label: "PDF ↗", href: "assets/openaccess/varadi-2022-pdbekb.pdf" }],
     media: { type: "animation", name: "pdbe-kb-2022", alt: "The PDBe infrastructure as in the paper's Figure 1: structures from depositors worldwide pass through the wwPDB's OneDep system, drawn as a train of turning gears; PDBe-KB partners drop in residue-level annotation files (over 80 million annotations for over 185,000 entries), which enrich each entry before it goes into PDBe's databases; then APIs (over 90 endpoints) send the data out to PDBe's entry pages and PDBe-KB's aggregated views of proteins, ligands and complexes. Finally, as in Figure 3, one entry page opens up: 1KPA, the human HINT1 dimer, with its sequence-feature tracks, topology diagram and 3D structure. A cursor moves along the tracks to lysine 92, which lies in the interface track and has a known variant, and the same residue lights up in a loop of the topology and at the dimer interface in 3D" }
   },
   {
@@ -298,6 +308,7 @@ window.PUBLICATIONS = [
     journal: "J. Mol. Biol. 435(14), 168021",
     authors: "Vallat B, Tauriello G, Bienert S, Haas J, Webb BM, Žídek A, Zheng W, Peisach E, Piehl DW, Anischanka I, Sillitoe I, Tolchard J, Varadi M, Baker D, Orengo C, Zhang Y, Hoch JC, Kurisu G, Patwardhan A, Velankar S, Burley SK, Sali A, Schwede T, Berman HM, Westbrook JD",
     doi: "10.1016/j.jmb.2023.168021",
+    links: [{ label: "PDF ↗", href: "assets/openaccess/vallat-2023-modelcif.pdf" }],
     media: { type: "animation", name: "modelcif-2023", alt: "A structure file's card: first the sections the PDB's PDBx/mmCIF format already has (coordinates, molecules, software and authors), beside a computed model; then the sections ModelCIF adds, each with a picture of what it holds: the target–template alignment, the modelling steps, linked files such as MSAs, and model quality, where the model colours by its per-residue confidence (pLDDT) and its pair-error (PAE) map builds" }
   },
   {
@@ -309,6 +320,7 @@ window.PUBLICATIONS = [
     journal: "Sci. Data 10, 204",
     authors: "Choudhary P, Anyango S, Berrisford J, Tolchard J, Varadi M, Velankar S",
     doi: "10.1038/s41597-023-02101-6",
+    links: [{ label: "PDF ↗", href: "assets/openaccess/choudhary-2023-sifts.pdf" }],
     media: { type: "animation", name: "sifts-2023", alt: "A protein's UniProtKB sequence above several PDB entries of it, each a fragment numbered its own way (one with an expression tag, one with a loop not modelled), so the same tryptophan is W155 in one and W140 in another. SIFTS maps each entry onto the sequence: the entries slide into place, their numbers become UniProtKB numbers and both tryptophans become W179; CATH domains, a parent domain split in two by an inserted one, then carry down onto every entry. Finally the rows move up and the fullest entry turns in 3D below, coloured by the same domains, with the inserted domain sitting between the parent's two parts" }
   },
   {
@@ -331,6 +343,7 @@ window.PUBLICATIONS = [
     journal: "Chemistry–Methods 5(6), e202400068",
     authors: "Pokochueva EV, Le NH, Guibert S, Gioiosa C, Stern Q, Tolchard J, Bocquelet C, Cala O, Cavaillès M, Veyre L, Mankinen O, Telkki V, Thieuleux C, Jannin S",
     doi: "10.1002/cmtd.202400068",
+    links: [{ label: "PDF ↗", href: "assets/openaccess/pokochueva-2025-hypso.pdf" }],
     media: { type: "animation", name: "hypso-pores-2025", alt: "A pore through a HYPSO silica sphere, its walls lined with TEMPO radicals: microwaves and cross polarisation hyperpolarise the acetate inside, then hot D₂O melts it and the molecules leave, those near the walls relaxing on the way. 4 nm pores start more polarised but lose about half; 28 nm pores lose about a quarter, so both arrive with the same ¹³C polarisation, with half the TEMPO" }
   },
   {
@@ -353,6 +366,7 @@ window.PUBLICATIONS = [
     journal: "Angew. Chem. Int. Ed., e3761769",
     authors: "Tolchard J, Le Marchand T, El Mammeri N, Sharma K, Bishoyi AK, Berbon M, Jaudzems K, Wisser D, Daskalov A, Saupe SJ, Stanek J, Sun Z, Ouari O, Habenstein B, Lesage A, Pintacuda G, Loquet A",
     doi: "10.1002/anie.3761769",
+    links: [{ label: "PDF ↗", href: "assets/openaccess/tolchard-2026-biodnp.pdf" }],
     media: { type: "animation", name: "proton-dnp-2026", alt: "A fibril strand dense with coupled protons gives a somewhat broad ¹H spectrum at 298 K and 12 kHz spinning, which broadens on cooling to 100 K. Spin dilution with ¹³CHD₂ methyls and then 40 kHz spinning resolve it; adding the DNP biradical broadens the peaks, and switching on the microwaves lifts the signal far above the noise. Finally, two peaks are joined by a correlation, and the distance between the two methyl protons behind it appears." }
   }
 ];
